@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('patients')->restrictOnDelete();
             $table->foreignId('admission_id')->nullable()->constrained('admissions')->restrictOnDelete();
             $table->foreignId('doctor_id')->constrained('doctors')->restrictOnDelete();
-            $table->string('assessment_type', 30); 
+            $table->string('assessment_type', 30); // initial, progress, mental_health, physical_health, discharge
             $table->dateTime('assessment_date');
             $table->text('presenting_concerns');
             $table->text('clinical_findings');

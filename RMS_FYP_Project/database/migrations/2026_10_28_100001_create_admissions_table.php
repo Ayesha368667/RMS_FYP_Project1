@@ -15,12 +15,12 @@ return new class extends Migration
             $table->unsignedBigInteger('batch_id')->nullable();
             $table->string('admission_number', 30)->unique();
             $table->dateTime('admission_date');
-            $table->string('admission_type', 30); 
+            $table->string('admission_type', 30); // new, readmission, transfer
             $table->text('admission_reason');
             $table->string('referral_source', 150)->nullable();
             $table->string('admission_photo_path', 255)->nullable();
             $table->foreignId('admitted_by')->constrained('users')->restrictOnDelete();
-            $table->string('status', 30)->default('admitted'); 
+            $table->string('status', 30)->default('admitted'); // admitted, discharged, cancelled
             $table->dateTime('discharge_date')->nullable();
             $table->string('discharge_type', 30)->nullable();
             $table->foreignId('discharged_by')->nullable()->constrained('users')->restrictOnDelete();

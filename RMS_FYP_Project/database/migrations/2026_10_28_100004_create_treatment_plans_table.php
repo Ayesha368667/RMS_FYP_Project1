@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('planned_interventions');
             $table->date('start_date');
             $table->date('target_end_date')->nullable();
-            $table->string('status', 20)->default('draft'); 
+            $table->string('status', 20)->default('draft'); // draft, active, completed, discontinued
             $table->foreignId('approved_by')->nullable()->constrained('doctors')->restrictOnDelete();
             $table->timestamp('approved_at')->nullable();
             $table->timestamps();

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('instructions')->nullable();
             $table->date('start_date');
             $table->date('end_date')->nullable();
-            $table->string('status', 20)->default('active'); 
+            $table->string('status', 20)->default('active'); // active, completed, discontinued
             $table->timestamps();
         });
     }

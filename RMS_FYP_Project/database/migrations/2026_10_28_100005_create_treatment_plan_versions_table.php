@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('change_reason');
             $table->foreignId('changed_by')->constrained('users')->restrictOnDelete();
             $table->dateTime('changed_at');
-            $table->timestamp('created_at')->nullable(); 
+            $table->timestamp('created_at')->nullable(); // history rows are never updated
 
             $table->unique(['treatment_plan_id', 'version_number']);
         });

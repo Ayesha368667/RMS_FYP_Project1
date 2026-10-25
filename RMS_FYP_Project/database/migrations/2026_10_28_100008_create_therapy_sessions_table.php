@@ -15,9 +15,9 @@ return new class extends Migration
             $table->foreignId('treatment_plan_id')->nullable()->constrained('treatment_plans')->restrictOnDelete();
             $table->foreignId('appointment_id')->nullable()->constrained('appointments')->restrictOnDelete();
             $table->dateTime('session_date');
-            $table->string('session_type', 30); 
-            $table->string('session_status', 20)->default('scheduled'); 
-            $table->text('session_notes')->nullable(); 
+            $table->string('session_type', 30); // individual, group, counselling, other
+            $table->string('session_status', 20)->default('scheduled'); // scheduled, completed, missed, cancelled
+            $table->text('session_notes')->nullable(); // confidential, not shown to patient
             $table->text('progress_summary')->nullable();
             $table->text('next_steps')->nullable();
             $table->dateTime('next_session_date')->nullable();
