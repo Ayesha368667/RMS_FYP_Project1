@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('is_emergency_contact')->default(false);
             $table->string('consent_status', 20)->default('not_granted');
             $table->dateTime('consent_recorded_at')->nullable();
-            $table->string('preferred_language', 5)->default('ur');
+            $table->string('preffered_language', 5)->default('ur');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
