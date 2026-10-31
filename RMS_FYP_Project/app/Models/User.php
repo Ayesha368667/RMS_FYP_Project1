@@ -8,12 +8,22 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+
 use Illuminate\Notifications\Notifiable;
+//mtlb user admin ko access deny ky lye phli or admin ko panel ki access deny ky lye dusri line add kia he
+
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
+    public function canAccessPanel(Panel $panel): bool
+    {
+         return $this->is_active && $this->role === $panel->getId();
+    }
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
