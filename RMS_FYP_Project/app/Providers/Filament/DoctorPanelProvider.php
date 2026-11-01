@@ -27,7 +27,7 @@ class DoctorPanelProvider extends PanelProvider
             ->id('doctor')
             ->path('doctor')
                         ->brandName('RMS Doctor Panel')
-
+//brandLogo(asset('images/logo.png'))` bhi laga do.
             ->colors([
                 'primary' => Color::Teal,
             ])
