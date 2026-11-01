@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Navigation\NavigationGroup;
 
 class DoctorPanelProvider extends PanelProvider
 {
@@ -30,7 +31,14 @@ class DoctorPanelProvider extends PanelProvider
 //brandLogo(asset('images/logo.png'))` bhi laga do.
             ->colors([
                 'primary' => Color::Teal,
+
             ])
+                        ->navigationGroups([
+                NavigationGroup::make('Patients'),
+                NavigationGroup::make('Clinical'),
+                NavigationGroup::make('Medicines and Appointments'),
+            ])
+
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\Filament\Doctor\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\Filament\Doctor\Pages')
             ->pages([
