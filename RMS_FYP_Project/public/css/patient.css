@@ -1,0 +1,29 @@
+:root {
+    --bs-primary: #0d7a6b;        /* apne logo ka rang yahan likhein */
+    --bs-primary-rgb: 13, 122, 107;
+    --bs-link-color: #0d7a6b;
+    --bs-link-hover-color: #095a4f;
+}
+
+.btn-primary {
+    --bs-btn-bg: #0d7a6b;
+    --bs-btn-border-color: #0d7a6b;
+    --bs-btn-hover-bg: #095a4f;
+    --bs-btn-hover-border-color: #095a4f;
+    --bs-btn-active-bg: #095a4f;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #0d7a6b;
+    --bs-btn-border-color: #0d7a6b;
+    --bs-btn-hover-bg: #0d7a6b;
+    --bs-btn-hover-border-color: #0d7a6b;
+}
+
+.navbar .nav-link { font-weight: 500; }
+.navbar .nav-link.active { color: var(--bs-primary) !important; }
+
+/* Mobile pe menu ke links bade aur aasan */
+@media (max-width: 991.98px) {
+    .navbar .nav-link { padding: .75rem 0; border-bottom: 1px solid #eee; }
+}
