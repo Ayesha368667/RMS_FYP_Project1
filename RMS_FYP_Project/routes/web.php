@@ -8,7 +8,6 @@ use App\Http\Controllers\Auth\ForcePasswordController;
 // Login page
 Route::middleware('guest')->group(function () {
 
-<<<<<<< Updated upstream
 // Placeholder: Member C replaces this with his real patient dashboard
 Route::middleware(['auth', 'active', 'role:patient'])
     ->get('/patient/dashboard', fn () => 'Patient dashboard (placeholder)')
@@ -24,7 +23,6 @@ if (app()->environment('local')) {
         return redirect()->route('patient.dashboard');
     });
 }
-=======
     Route::get('/login', function () {
         return app(LoginController::class)->show();}) ->name('login');
 
@@ -80,4 +78,3 @@ Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])
     ->get('/patient/dashboard', function () {
         return 'Patient dashboard (placeholder)';
     })->name('patient.dashboard');
->>>>>>> Stashed changes
