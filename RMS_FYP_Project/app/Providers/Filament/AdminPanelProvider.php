@@ -26,7 +26,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
-            ->login()
+            
             ->colors(['primary' => 
                 \Filament\Support\Colors\Color::Teal
             ])
@@ -56,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
                 //directly admin panel in classes ko check kry ga authentication ky lye 
                 \Filament\Http\Middleware\Authenticate::class,
                 \App\Http\Middleware\EnsureAccountIsActive::class,
+                \App\Http\Middleware\EnsurePasswordChanged::class,
             ]);
     }
 }

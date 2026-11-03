@@ -19,7 +19,11 @@ class FollowupFormSeeder extends Seeder
         }
 
         FollowupForm::updateOrCreate(
+<<<<<<< Updated upstream
             ['form_name' => 'Default Follow-up Form', 'version_number' => 1],
+=======
+            ['form_name' => 'Default Follow-up Form'],
+>>>>>>> Stashed changes
             [
                 'description' => 'Standard check-in form for rehabilitation patients.',
                 'is_active'   => true,

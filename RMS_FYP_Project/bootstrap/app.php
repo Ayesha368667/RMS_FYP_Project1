@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             //mtlb role sy hm EnsureRole ki class ko access kren gy or wo chalen gy
             'role'   => \App\Http\Middleware\EnsureRole::class,
             'active' => \App\Http\Middleware\EnsureAccountIsActive::class,
+            'password.changed' => \App\Http\Middleware\EnsurePasswordChanged::class,
         //agr hm ye ni bnaty to hmy pury class reference sy access krna prta he it gives short name
         ]);
     })
