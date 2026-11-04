@@ -8,6 +8,8 @@ use App\Filament\Doctor\Resources\Patients\Pages\ListPatients;
 use App\Filament\Doctor\Resources\Patients\Schemas\PatientForm;
 use App\Filament\Doctor\Resources\Patients\Tables\PatientsTable;
 use App\Models\Patient;
+use App\Models\Doctor;
+
 use BackedEnum;
 use UnitEnum;
 
@@ -60,4 +62,17 @@ protected static string|UnitEnum|null $navigationGroup = 'Patients';
                 SoftDeletingScope::class,
             ]);
     }
+        public static function getEloquentQuery(): Builder
+    {
+        $doctorId = \App\Models\Doctor::where('user_id', auth()->id())->value('id');
+    
+    if (!$doctorId) {
+        return parent::getEloquentQuery()->whereRaw('1 = 0');
+    }
+
+    return parent::getEloquentQuery()->whereHas('doctorAssignments', function ($query) use ($doctorId) {
+        $query->where('doctor_id', $doctorId)->where('status', 'active');
+    });
+    }
+
 }
