@@ -6,12 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('doctor__assignments', function (Blueprint $table) {
+        Schema::create('doctor_assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->restrictOnDelete();
             $table->foreignId('doctor_id')->constrained('doctors')->restrictOnDelete();
@@ -22,18 +19,15 @@ return new class extends Migration
             $table->string('status', 20)->default('active');
             $table->text('notes')->nullable();
             $table->timestamps();
-            //patient_id + status helps queries that find a patient's active assignments.
-            //doctor_id + status helps queries that find a doctor's active assignments.
+           
             $table->index(['patient_id', 'status']);
             $table->index(['doctor_id', 'status']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
-        Schema::dropIfExists('doctor__assignments');
+        Schema::dropIfExists('doctor_assignments');
     }
 };

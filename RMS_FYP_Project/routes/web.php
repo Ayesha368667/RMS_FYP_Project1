@@ -1,7 +1,80 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ForcePasswordController;
 
-Route::get('/', function () {
-    return view('welcome');
+// Login page
+Route::middleware('guest')->group(function () {
+
+// Placeholder: Member C replaces this with his real patient dashboard
+Route::middleware(['auth', 'active', 'role:patient'])
+    ->get('/patient/dashboard', fn () => 'Patient dashboard (placeholder)')
+    ->name('patient.dashboard');
+    // Placeholder: Member C replaces this with his real patient dashboard
+Route::middleware(['auth', 'active', 'role:patient'])
+    ->get('/patient/dashboard', fn () => view('patient.dashboard'))
+    ->name('patient.dashboard');
+    // DEV ONLY: sirf local machine par chalta hai, patient portal par kaam karne ke liye
+if (app()->environment('local')) {
+    Route::get('/dev/login-patient', function () {
+        auth()->login(\App\Models\User::where('email', 'patient@test.com')->firstOrFail());
+        return redirect()->route('patient.dashboard');
+    });
+}
+    Route::get('/login', function () {
+        return app(LoginController::class)->show();}) ->name('login');
+
+    Route::post('/login', function (Illuminate\Http\Request $request) {
+        return app(LoginController::class)->login($request);
+    })->name('login.store');
+
 });
+
+
+// Logout
+Route::post('/logout', function (Illuminate\Http\Request $request) {
+    return app(LoginController::class)->logout($request);
+})->middleware('auth')->name('logout');
+
+
+// Homepage
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
+
+
+// Password change routes
+Route::middleware(['auth', 'active'])->group(function () {
+
+    Route::get('/password/change', function () {
+        return app(ForcePasswordController::class)->show();
+    })->name('password.change');
+
+    Route::put('/password/change', function (Illuminate\Http\Request $request) {
+        return app(ForcePasswordController::class)->update($request);
+    })->name('password.change.update');
+
+});
+
+
+// Role-based dashboard
+Route::middleware(['auth', 'active', 'password.changed'])
+    ->get('/dashboard', function () {
+
+        return match (auth()->user()->role) {
+            'admin'   => redirect('/admin'),
+            'doctor'  => redirect('/doctor'),
+            'patient' => redirect()->route('patient.dashboard'),
+            default   => abort(403),
+        };
+
+    })->name('dashboard');
+
+
+// Patient dashboard placeholder
+Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])
+    ->get('/patient/dashboard', function () {
+        return 'Patient dashboard (placeholder)';
+    })->name('patient.dashboard');

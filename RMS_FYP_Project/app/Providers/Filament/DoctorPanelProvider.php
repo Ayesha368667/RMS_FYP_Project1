@@ -27,16 +27,17 @@ class DoctorPanelProvider extends PanelProvider
         return $panel
             ->id('doctor')
             ->path('doctor')
-                        ->brandName('RMS Doctor Panel')
+            
+            ->brandName('RMS Doctor Panel')
 //brandLogo(asset('images/logo.png'))` bhi laga do.
             ->colors([
                 'primary' => Color::Teal,
 
             ])
-                        ->navigationGroups([
-                NavigationGroup::make('Patients'),
-                NavigationGroup::make('Clinical'),
-                NavigationGroup::make('Medicines and Appointments'),
+                ->navigationGroups([
+                    NavigationGroup::make('Patients'),
+                    NavigationGroup::make('Clinical'),
+                    NavigationGroup::make('Medicines and Appointments'),
             ])
 
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\Filament\Doctor\Resources')
@@ -61,7 +62,9 @@ class DoctorPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
-            ]);
+                 \Filament\Http\Middleware\Authenticate::class,
+                \App\Http\Middleware\EnsureAccountIsActive::class,
+                \App\Http\Middleware\EnsurePasswordChanged::class,
+           ]);
     }
 }

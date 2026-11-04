@@ -1,0 +1,7 @@
+
+        body { background: #f1f8f6; }
+        .card { border: 0; border-radius: 14px; box-shadow: 0 6px 24px rgba(13,148,136,.15); }
+        h4 { color: #0f766e; }
+        .btn-teal { background: #0d9488; color: #fff; }
+        .btn-teal:hover { background: #0f766e; color: #fff; }
+    
