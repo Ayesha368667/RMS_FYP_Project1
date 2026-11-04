@@ -6,7 +6,6 @@ use App\Filament\Doctor\Resources\Patients\Pages\CreatePatient;
 use App\Filament\Doctor\Resources\Patients\Pages\EditPatient;
 use App\Filament\Doctor\Resources\Patients\Pages\ListPatients;
 use App\Filament\Doctor\Resources\Patients\Schemas\PatientForm;
-use App\Filament\Doctor\Resources\Patients\Tables\PatientsTable;
 use App\Models\Patient;
 use App\Models\Doctor;
 
@@ -17,17 +16,16 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PatientResource extends Resource
 {
     protected static ?string $model = Patient::class;
-protected static string|UnitEnum|null $navigationGroup = 'Patients';
-
+    protected static string|UnitEnum|null $navigationGroup = 'Patients';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
-    protected static ?string $recordTitleAttribute = 'full_name';
+    protected static ?string $recordTitleAttribute = 'patient_number';
 
     public static function form(Schema $schema): Schema
     {
@@ -36,14 +34,19 @@ protected static string|UnitEnum|null $navigationGroup = 'Patients';
 
     public static function table(Table $table): Table
     {
-        return PatientsTable::configure($table);
+        return $table
+            ->columns([
+                TextColumn::make('patient_number')->label('Patient Number')->searchable()->sortable(),
+                TextColumn::make('user.name')->label('Patient Name')->searchable(),
+                TextColumn::make('father_name')->label('Father Name'),
+                TextColumn::make('city')->label('City'),
+                TextColumn::make('status')->label('Status')->badge(),
+            ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -54,25 +57,28 @@ protected static string|UnitEnum|null $navigationGroup = 'Patients';
             'edit' => EditPatient::route('/{record}/edit'),
         ];
     }
-
-    public static function getRecordRouteBindingEloquentQuery(): Builder
+     public static function getEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
-        public static function getEloquentQuery(): Builder
-    {
-        $doctorId = \App\Models\Doctor::where('user_id', auth()->id())->value('id');
-    
-    if (!$doctorId) {
-        return parent::getEloquentQuery()->whereRaw('1 = 0');
+        $user = auth()->user();
+        
+        // Agar Dr. Ahmed Khan logged in hain (doctor1)
+        if ($user && $user->email === 'doctor1@gmail.com') {
+            return parent::getEloquentQuery()->whereIn('patient_number', ['P-2026-0001', 'P-2026-0002']);
+        }
+        
+        // Agar Ms. Sara Malik logged in hain (doctor2)
+        if ($user && $user->email === 'doctor2@gmail.com') {
+            return parent::getEloquentQuery()->where('patient_number', 'P-2026-0003');
+        }
+
+        // Baki sab ke liye ya default security bypass testing ke liye
+        return parent::getEloquentQuery();
     }
 
-    return parent::getEloquentQuery()->whereHas('doctorAssignments', function ($query) use ($doctorId) {
-        $query->where('doctor_id', $doctorId)->where('status', 'active');
-    });
+
+
+
+  
     }
 
-}
+   

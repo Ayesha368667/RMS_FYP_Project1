@@ -19,8 +19,12 @@ class FollowupFormSeeder extends Seeder
         }
 
         FollowupForm::updateOrCreate(
-            ['form_name' => 'Default Follow-up Form', 'version_number' => 1],
-            ['form_name' => 'Default Follow-up Form'],
+            // 1. Pehla Array: Yeh record dhoondhne ke liye hai
+            [
+                'form_name' => 'Default Follow-up Form', 
+                'version_number' => 1
+            ],
+            // 2. Doosra Array: Baqi saara data jo insert ya update hona hai
             [
                 'description' => 'Standard check-in form for rehabilitation patients.',
                 'is_active'   => true,

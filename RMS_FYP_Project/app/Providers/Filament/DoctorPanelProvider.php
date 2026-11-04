@@ -34,6 +34,7 @@ class DoctorPanelProvider extends PanelProvider
                 'primary' => Color::Teal,
 
             ])
+            ->login() // <-- Yeh nayi line aapne yahan add karni hai
                 ->navigationGroups([
                     NavigationGroup::make('Patients'),
                     NavigationGroup::make('Clinical'),
