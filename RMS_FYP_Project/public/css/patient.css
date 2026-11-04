@@ -27,3 +27,15 @@
 @media (max-width: 991.98px) {
     .navbar .nav-link { padding: .75rem 0; border-bottom: 1px solid #eee; }
 }
+/* Urdu font (RTL) */
+body.lang-ur {
+    font-family: 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', 'Segoe UI', Tahoma, serif;
+    line-height: 2;          /* Nastaliq ko zyada line height chahiye */
+}
+body.lang-ur .navbar .nav-link,
+body.lang-ur .btn,
+body.lang-ur .card-title { line-height: 2.2; }
+body.lang-ur h1, body.lang-ur h2, body.lang-ur h3,
+body.lang-ur h4, body.lang-ur h5, body.lang-ur h6 { line-height: 2; }
+
+/* Icons ke saamne gap RTL me khud theek rehta hai (me-1 flip hota hai) */
