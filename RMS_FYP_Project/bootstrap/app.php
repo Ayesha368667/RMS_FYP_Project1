@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'password.changed' => \App\Http\Middleware\EnsurePasswordChanged::class,
         //agr hm ye ni bnaty to hmy pury class reference sy access krna prta he it gives short name
         ]);
+            $middleware->web(append: [
+        \App\Http\Middleware\SetLocale::class,
+    ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

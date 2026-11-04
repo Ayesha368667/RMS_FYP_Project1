@@ -7,31 +7,19 @@ use App\Http\Controllers\Auth\ForcePasswordController;
 
 // Login page
 Route::middleware('guest')->group(function () {
-
-// Placeholder: Member C replaces this with his real patient dashboard
-Route::middleware(['auth', 'active', 'role:patient'])
-    ->get('/patient/dashboard', fn () => 'Patient dashboard (placeholder)')
-    ->name('patient.dashboard');
-    // Placeholder: Member C replaces this with his real patient dashboard
-Route::middleware(['auth', 'active', 'role:patient'])
-    ->get('/patient/dashboard', fn () => view('patient.dashboard'))
-    ->name('patient.dashboard');
-    // DEV ONLY: sirf local machine par chalta hai, patient portal par kaam karne ke liye
-if (app()->environment('local')) {
-    Route::get('/dev/login-patient', function () {
-        auth()->login(\App\Models\User::where('email', 'patient@test.com')->firstOrFail());
-        return redirect()->route('patient.dashboard');
-    });
-}
     Route::get('/login', function () {
-        return app(LoginController::class)->show();}) ->name('login');
+        return app(LoginController::class)->show();
+    })->name('login');
 
     Route::post('/login', function (Illuminate\Http\Request $request) {
         return app(LoginController::class)->login($request);
     })->name('login.store');
-
 });
 
+// Patient dashboard (layout)
+Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])
+    ->get('/patient/dashboard', fn () => view('patient.dashboard'))
+    ->name('patient.dashboard');
 
 // Logout
 Route::post('/logout', function (Illuminate\Http\Request $request) {
@@ -73,8 +61,9 @@ Route::middleware(['auth', 'active', 'password.changed'])
     })->name('dashboard');
 
 
-// Patient dashboard placeholder
-Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])
-    ->get('/patient/dashboard', function () {
-        return 'Patient dashboard (placeholder)';
-    })->name('patient.dashboard');
+// Language switcher (en/ur)
+Route::get('/lang/{locale}', function (string $locale) {
+    abort_unless(in_array($locale, ['en', 'ur'], true), 404);
+    session(['locale' => $locale]);
+    return redirect()->back();
+})->name('lang.switch');
