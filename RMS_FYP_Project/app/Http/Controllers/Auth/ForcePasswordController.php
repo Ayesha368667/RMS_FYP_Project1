@@ -24,12 +24,21 @@ class ForcePasswordController extends Controller
             'current_password' => ['required', 'current_password'],
             'password' => [//new password
 
-                'required', 'confirmed', 'different:current_password',
+                'required', 'confirmed',
                 Password::min(8)->letters()->numbers(),
             ],
         ]);
 
         $user = $request->user();
+
+        if ($user->isOldPassword($request->password)) {
+            return back()->withErrors([
+                'password' => 'You cannot reuse your current or previous password.',
+            ]);
+     }
+
+        $user->previous_password = $user->password;
+
         $user->password = Hash::make($request->password);
         $user->must_change_password = false;
         $user->save();

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email',150)->unique();
             $table->string('phone',20)->nullable();
             $table->string('password');
-            $table->string('previous_password')->default(false);
+            $table->string('previous_password')->nullable();
             $table->boolean('must_change_password')->default(false);
             $table->string('role',20)->index();
             $table->string('preffered_language')->default('en');

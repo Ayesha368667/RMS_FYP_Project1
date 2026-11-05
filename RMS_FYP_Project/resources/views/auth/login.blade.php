@@ -3,6 +3,10 @@
 @section('content')
     <h4 class="text-center mb-4">BloomWay Management System</h4>
 
+    @if (session('status'))
+    <div class="alert alert-success">{{ session('status') }}</div>
+@endif
+
     @if ($errors->any())
         <div class="alert alert-danger">{{ $errors->first() }}</div>
     @endif
@@ -18,5 +22,10 @@
             <input type="password" name="password" class="form-control" required>
         </div>
         <button class="btn btn-teal btn-block">Login</button>
+
+        <div class="text-center mt-3">
+    <a href="{{ route('password.request') }}">Forgot password?</a>
+</div>
+
     </form>
 @endsection

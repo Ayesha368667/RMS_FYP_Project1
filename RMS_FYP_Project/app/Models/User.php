@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -64,5 +65,19 @@ class User extends Authenticatable implements FilamentUser
     }
     public function activityLogs() { 
         return $this->hasMany(ActivityLog::class); 
+    }
+    public function isOldPassword($newPassword)
+    {
+        // naya password abhi wale jaisa ho
+        if (Hash::check($newPassword, $this->password)) {
+            return true;
+        }
+
+        // naya password pichle wale jaisa ho
+        if ($this->previous_password && Hash::check($newPassword, $this->previous_password)) {
+            return true;
+        }
+
+        return false;
     }
 }

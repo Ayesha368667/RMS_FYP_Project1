@@ -1,69 +1,57 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForcePasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
-// Login page
-Route::middleware('guest')->group(function () {
-    Route::get('/login', function () {
-        return app(LoginController::class)->show();
-    })->name('login');
+    // Homepage
+    Route::get('/', function () {
+        return redirect()->route('dashboard');
+    });
 
-    Route::post('/login', function (Illuminate\Http\Request $request) {
-        return app(LoginController::class)->login($request);
-    })->name('login.store');
-});
+    // Login aur forgot/reset password (sirf wo log jo login nahi hain)
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', [LoginController::class, 'show'])->name('login');
+        Route::post('/login', [LoginController::class, 'login'])->name('login.store');
 
-// Patient dashboard (layout)
-Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])
-    ->get('/patient/dashboard', fn () => view('patient.dashboard'))
-    ->name('patient.dashboard');
+        Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkForm'])->name('password.request');
+        Route::post('/forgot-password', [ForgotPasswordController::class, 'sendLink'])->name('password.email');
+        Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+        Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
+    });
 
-// Logout
-Route::post('/logout', function (Illuminate\Http\Request $request) {
-    return app(LoginController::class)->logout($request);
-})->middleware('auth')->name('logout');
+    // Logout
+    Route::post('/logout', [LoginController::class, 'logout'])
+        ->middleware('auth')
+        ->name('logout');
 
+    // Password change
+    Route::middleware(['auth', 'active'])->group(function () {
+        Route::get('/password/change', [ForcePasswordController::class, 'show'])->name('password.change');
+        Route::put('/password/change', [ForcePasswordController::class, 'update'])->name('password.change.update');
+    });
 
-// Homepage
-Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
-
-
-// Password change routes
-Route::middleware(['auth', 'active'])->group(function () {
-
-    Route::get('/password/change', function () {
-        return app(ForcePasswordController::class)->show();
-    })->name('password.change');
-
-    Route::put('/password/change', function (Illuminate\Http\Request $request) {
-        return app(ForcePasswordController::class)->update($request);
-    })->name('password.change.update');
-
-});
-
-
-// Role-based dashboard
-Route::middleware(['auth', 'active', 'password.changed'])
-    ->get('/dashboard', function () {
-
+    // Role ke hisab se dashboard
+    Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', function () {
         return match (auth()->user()->role) {
             'admin'   => redirect('/admin'),
             'doctor'  => redirect('/doctor'),
             'patient' => redirect()->route('patient.dashboard'),
             default   => abort(403),
         };
-
     })->name('dashboard');
 
+    // Patient portal (C ke pages yahan aayenge)
+    Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])->group(function () {
+        Route::get('/patient/dashboard', function () {
+            return view('patient.dashboard');
+        })->name('patient.dashboard');
+    });
 
-// Language switcher (en/ur)
-Route::get('/lang/{locale}', function (string $locale) {
-    abort_unless(in_array($locale, ['en', 'ur'], true), 404);
-    session(['locale' => $locale]);
-    return redirect()->back();
-})->name('lang.switch');
+    // Language switcher (en/ur)
+    Route::get('/lang/{locale}', function ($locale) {
+        abort_unless(in_array($locale, ['en', 'ur']), 404);
+        session(['locale' => $locale]);
+        return redirect()->back();
+    })->name('lang.switch');
