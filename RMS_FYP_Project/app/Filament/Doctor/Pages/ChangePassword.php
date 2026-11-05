@@ -64,28 +64,32 @@ class ChangePassword extends Page
             ])
             ->statePath('data');
     }
-
-    public function save(): void
+    public function save()
     {
         $data = $this->form->getState();
         $user = Auth::user();
 
+        // Current password check karna
         if (! Hash::check($data['current_password'], $user->password)) {
             throw ValidationException::withMessages([
                 'data.current_password' => 'The current password is incorrect.',
             ]);
         }
 
-        // >>> If A has shared change-password logic (a service or action class),
-        // >>> call it here instead of the next 2 lines.
+        // A ki password reuse policy check
+        if (method_exists($user, 'isOldPassword') && $user->isOldPassword($data['password'])) {
+            throw ValidationException::withMessages([
+                'data.password' => 'You cannot reuse your current or previous password.',
+            ]);
+        }
+
+        // A ki logic ke mutabiq previous password save karna aur flag false karna
+        $user->previous_password = $user->password;
         $user->password = Hash::make($data['password']);
+        $user->must_change_password = false;
         $user->save();
 
-        // >>> If A's EnsurePasswordChanged middleware uses a flag column
-        // >>> (for example must_change_password), reset it here too:
-        // >>> $user->forceFill(['must_change_password' => false])->save();
-
-        // keep the current session logged in after the password changed
+        // Session update taaki password change hone ke baad session expire na ho
         session()->put([
             'password_hash_'.Filament::getAuthGuard() => $user->getAuthPassword(),
         ]);
@@ -96,5 +100,9 @@ class ChangePassword extends Page
             ->title('Password changed successfully')
             ->success()
             ->send();
+
+        // Doctor dashboard par redirect karna
+        return redirect()->to('/doctor');
     }
+
 }
