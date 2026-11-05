@@ -52,7 +52,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         return app(ForcePasswordController::class)->show();
     })->name('password.change');
 
-    Route::put('/password/change', function (Illuminate\Http\Request $request) {
+    Route::post('/password/change', function (Illuminate\Http\Request $request) {
         return app(ForcePasswordController::class)->update($request);
     })->name('password.change.update');
 
