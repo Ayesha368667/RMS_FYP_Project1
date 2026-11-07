@@ -7,11 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActivityObserver
 {
-    //Observer kuch kam automatically krta he 
-    //bgair hr controller me code likhy
-    //example (RMS) Tumhare RMS mein UserObserver banaya gaya ho,
-    //to ye automatically user ke create ya update hone par specific actions perform kar sakta hai.
-
     // Ye fields log mein kabhi nahi jayenge (passwords safe rahein)
     private $hidden = ['password', 'previous_password', 'remember_token', 'updated_at'];
 
@@ -28,11 +23,13 @@ class ActivityObserver
             return;
         }
 
+        // Badalne se pehle ki values
         $old = [];
-        foreach (array_keys($new) as $field) {
+        foreach ($new as $field => $value) {
             $old[$field] = $model->getOriginal($field);
         }
 
+        // Active/inactive badla to alag naam se likho
         $action = 'updated';
         if (array_key_exists('is_active', $new)) {
             $action = $new['is_active'] ? 'activated' : 'deactivated';
@@ -41,11 +38,7 @@ class ActivityObserver
         $this->save($action, $model, $old, $new);
     }
 
-    public function deleted(Model $model)
-    {
-        $this->save('deleted', $model, $this->clean($model->getAttributes()), null);
-    }
-
+    // Passwords log mein nahi jayenge
     private function clean($values)
     {
         return array_diff_key($values, array_flip($this->hidden));
@@ -53,14 +46,17 @@ class ActivityObserver
 
     private function save($action, $model, $old, $new)
     {
+        $name = class_basename($model);
+
         ActivityLog::create([
-            'user_id'    => auth()->id(),
-            'action'     => $action,
-            'model_type' => class_basename($model),
-            'model_id'   => $model->getKey(),
-            'old_values' => $old,
-            'new_values' => $new,
-            'ip_address' => request()->ip(),
+            'user_id'      => auth()->id(),
+            'action'       => $action,
+            'subject_type' => $name,
+            'subject_id'   => $model->id,
+            'description'  => $name . ' #' . $model->id . ' ' . $action,
+            'old_values'   => $old,
+            'new_values'   => $new,
+            'ip_address'   => request()->ip(),
         ]);
     }
 }

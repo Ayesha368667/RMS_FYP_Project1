@@ -20,7 +20,7 @@ class DemoUsersSeeder extends Seeder
 
         $doctors = [
             ['Dr. Ahmed Khan', 'doctor1@gmail.com', 'D-0001', 'MBBS, FCPS Psychiatry', 'Psychiatry', 'doctor'],
-            ['Ms. Sara Malik', 'doctor2@gmail.com', 'D-0002', 'MSc Psychology', 'Addiction counselling', 'counsellor'],
+            ['Ms. Sara Malik', 'doctor2@gmail.com', 'D-0002', 'MSc Psychology', 'Addiction therapist', 'therapist'],
         ];
 
         foreach ($doctors as [$name, $email, $staff, $qualification, $specialization, $type]) {
