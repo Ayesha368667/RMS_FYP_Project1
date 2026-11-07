@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('photo_path')->nullable();
             $table->date('registration_date');
             $table->string('status', 20)->default('registered')->index();
-            $table->foreignId('created_by')->constrained('users')->restricOnDelete();
+            $table->foreignId('created_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

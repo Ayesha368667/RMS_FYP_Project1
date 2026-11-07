@@ -1,80 +1,57 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForcePasswordController;
-
-// Login page
-Route::middleware('guest')->group(function () {
-
-// Placeholder: Member C replaces this with his real patient dashboard
-Route::middleware(['auth', 'active', 'role:patient'])
-    ->get('/patient/dashboard', fn () => 'Patient dashboard (placeholder)')
-    ->name('patient.dashboard');
-    // Placeholder: Member C replaces this with his real patient dashboard
-Route::middleware(['auth', 'active', 'role:patient'])
-    ->get('/patient/dashboard', fn () => view('patient.dashboard'))
-    ->name('patient.dashboard');
-    // DEV ONLY: sirf local machine par chalta hai, patient portal par kaam karne ke liye
-if (app()->environment('local')) {
-    Route::get('/dev/login-patient', function () {
-        auth()->login(\App\Models\User::where('email', 'patient@test.com')->firstOrFail());
-        return redirect()->route('patient.dashboard');
-    });
-}
-    Route::get('/login', function () {
-        return app(LoginController::class)->show();}) ->name('login');
-
-    Route::post('/login', function (Illuminate\Http\Request $request) {
-        return app(LoginController::class)->login($request);
-    })->name('login.store');
-
-});
-
-
-// Logout
-Route::post('/logout', function (Illuminate\Http\Request $request) {
-    return app(LoginController::class)->logout($request);
-})->middleware('auth')->name('logout');
-
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 // Homepage
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
+// Login aur forgot/reset password (sirf wo log jo login nahi hain)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'show'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.store');
 
-// Password change routes
-Route::middleware(['auth', 'active'])->group(function () {
-
-    Route::get('/password/change', function () {
-        return app(ForcePasswordController::class)->show();
-    })->name('password.change');
-
-    Route::put('/password/change', function (Illuminate\Http\Request $request) {
-        return app(ForcePasswordController::class)->update($request);
-    })->name('password.change.update');
-
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
 });
 
+// Logout
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
 
-// Role-based dashboard
-Route::middleware(['auth', 'active', 'password.changed'])
-    ->get('/dashboard', function () {
+// Password change
+Route::middleware(['auth', 'active'])->group(function () {
+    Route::get('/password/change', [ForcePasswordController::class, 'show'])->name('password.change');
+    Route::put('/password/change', [ForcePasswordController::class, 'update'])->name('password.change.update');
+});
 
-        return match (auth()->user()->role) {
-            'admin'   => redirect('/admin'),
-            'doctor'  => redirect('/doctor'),
-            'patient' => redirect()->route('patient.dashboard'),
-            default   => abort(403),
-        };
+// Role ke hisab se dashboard
+Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', function () {
+    return match (auth()->user()->role) {
+        'admin'   => redirect('/admin'),
+        'doctor'  => redirect('/doctor'),
+        'patient' => redirect()->route('patient.dashboard'),
+        default   => abort(403),
+    };
+})->name('dashboard');
 
-    })->name('dashboard');
-
-
-// Patient dashboard placeholder
-Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])
-    ->get('/patient/dashboard', function () {
-        return 'Patient dashboard (placeholder)';
+// Patient portal (C ke pages yahan aayenge)
+Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])->group(function () {
+    Route::get('/patient/dashboard', function () {
+        return view('patient.dashboard');
     })->name('patient.dashboard');
+});
+
+// Language switcher (en/ur)
+Route::get('/lang/{locale}', function ($locale) {
+    abort_unless(in_array($locale, ['en', 'ur']), 404);
+    session(['locale' => $locale]);
+    return redirect()->back();
+})->name('lang.switch');
