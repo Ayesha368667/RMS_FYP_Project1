@@ -17,6 +17,29 @@ use Illuminate\Support\Facades\Schema as DbSchema;
 
 class DoctorAssignmentForm
 {
+    /**
+     * Active doctors with their current load (number of active patients).
+     */
+    public static function doctorOptions(): array
+    {
+        return Doctor::query()
+            ->with('user')
+            ->withCount(['doctorAssignments as active_patients_count' => fn ($query) => $query->where('status', 'active')])
+            ->when(
+                DbSchema::hasColumn('doctors', 'employment_status'),
+                fn ($query) => $query->where('employment_status', 'active')
+            )
+            ->get()
+            ->mapWithKeys(fn (Doctor $doctor): array => [
+                $doctor->id => trim(
+                    ($doctor->user?->name ?? 'Doctor #'.$doctor->id)
+                    .($doctor->staff_number ? ' ('.$doctor->staff_number.')' : '')
+                    .' - '.$doctor->active_patients_count.' active patients'
+                ),
+            ])
+            ->all();
+    }
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
@@ -39,18 +62,8 @@ class DoctorAssignmentForm
                             ->disabledOn('edit'),
 
                         Select::make('doctor_id')
-                            ->label('Doctor / therapist')
-                            ->options(fn (): array => Doctor::query()
-                                ->with('user')
-                               ->when(
-    DbSchema::hasColumn('doctors', 'availability_status'),
-    fn ($query) => $query->where('availability_status', 'active')
-)
-                                ->get()
-                                ->mapWithKeys(fn (Doctor $doctor): array => [
-                                    $doctor->id => trim(($doctor->user?->name ?? 'Doctor #'.$doctor->id).($doctor->staff_number ? ' ('.$doctor->staff_number.')' : '')),
-                                ])
-                                ->all())
+                            ->label('Doctor / therapist (with current load)')
+                            ->options(fn (): array => self::doctorOptions())
                             ->searchable()
                             ->required()
                             ->disabledOn('edit')

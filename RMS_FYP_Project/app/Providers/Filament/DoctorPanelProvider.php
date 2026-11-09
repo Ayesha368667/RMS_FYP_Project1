@@ -27,7 +27,7 @@ class DoctorPanelProvider extends PanelProvider
         return $panel
             ->id('doctor')
             ->path('doctor')
-            
+          
             ->brandName('RMS Doctor Panel')
 //brandLogo(asset('images/logo.png'))` bhi laga do.
             ->colors([
@@ -40,6 +40,9 @@ class DoctorPanelProvider extends PanelProvider
                     NavigationGroup::make('Clinical'),
                     NavigationGroup::make('Medicines and Appointments'),
             ])
+            ->databaseNotifications()
+            
+->databaseNotificationsPolling('30s') // <-- Yeh line add karein
 
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\Filament\Doctor\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\Filament\Doctor\Pages')
