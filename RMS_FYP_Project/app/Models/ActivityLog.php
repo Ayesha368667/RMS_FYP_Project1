@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 
 class ActivityLog extends Model
 {
+    // Table mein sirf created_at hai, wo database khud bhar deta hai
     const UPDATED_AT = null;
 
     protected $fillable = [
@@ -16,7 +16,9 @@ class ActivityLog extends Model
 
     protected function casts(): array
     {
-        return ['old_values' => 'array', 'new_values' => 'array'];
+        return ['old_values' => 'array',
+        'new_values' => 'array'
+        ];
     }
 
     public function user() { return $this->belongsTo(User::class); }

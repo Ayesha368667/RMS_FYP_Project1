@@ -19,6 +19,18 @@ class FamilyContact extends Model
         'consent_recorded_at'  => 'datetime',
     ];
 
+    // Msg bhejny ki Ijazat badalte hi uska waqt khud likh do
+    protected static function booted()
+    {
+        static::saving(function ($contact) {
+            //isdirty mtlb kuch change to ni hua check kry ga
+            if ($contact->isDirty('consent_status')) {
+                //agr change hua he to time change kr do otherwise rehny do
+                $contact->consent_recorded_at = now();
+            }
+        });
+    }
+
     public function patient() { return $this->belongsTo(Patient::class); }
     public function logs()    { return $this->hasMany(FamilyContactLog::class); }
 }

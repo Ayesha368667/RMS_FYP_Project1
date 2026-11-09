@@ -14,13 +14,12 @@ class FollowupFormSeeder extends Seeder
         $admin = User::where('role', 'admin')->first() ?? User::first();
 
         if (! $admin) {
-            $this->command->error('Koi user nahi mila. Pehle admin user banayein.');
+            $this->command->error('No user found! Create user first.');
             return;
         }
 
         FollowupForm::updateOrCreate(
             ['form_name' => 'Default Follow-up Form', 'version_number' => 1],
-            ['form_name' => 'Default Follow-up Form'],
             [
                 'description' => 'Standard check-in form for rehabilitation patients.',
                 'is_active'   => true,
