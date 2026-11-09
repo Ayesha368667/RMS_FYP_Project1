@@ -10,6 +10,8 @@ use App\Filament\Doctor\Resources\Appointments\Tables\AppointmentsTable;
 use App\Models\Appointment;
 use BackedEnum;
 use UnitEnum;
+use Illuminate\Database\Eloquent\Builder;
+
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -50,4 +52,17 @@ protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRect
             'edit' => EditAppointment::route('/{record}/edit'),
         ];
     }
+    public static function getEloquentQuery(): Builder
+{
+    $doctorId = \App\Models\Doctor::where('user_id', auth()->id())->value('id');
+    
+    if (!$doctorId) {
+        return parent::getEloquentQuery()->whereRaw('1 = 0');
+    }
+
+    return parent::getEloquentQuery()->whereHas('patient.doctorAssignments', function ($query) use ($doctorId) {
+        $query->where('doctor_id', $doctorId)->where('status', 'active');
+    });
+}
+
 }

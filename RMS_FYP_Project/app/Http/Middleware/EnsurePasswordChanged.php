@@ -19,10 +19,11 @@ class EnsurePasswordChanged
         //ye bar bar change password , logout page show kry ga user ko jb tk wo 1 dfa apna temporary
         //password change na kr ly 
         if ($user && $user->must_change_password
-            && ! $request->routeIs('password.change*', 'logout', 'filament.*.auth.logout')) {
+            && ! $request->routeIs('password.change*', 'logout', 'filament.*.auth.logout', 'filament.doctor.pages.change-password')) {
             return redirect()->route('password.change');
         }
 
         return $next($request);
     }
 }
+

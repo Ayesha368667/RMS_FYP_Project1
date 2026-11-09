@@ -2,48 +2,41 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
+use Filament\Models\Contracts\HasDatabaseNotifications; // <-- Yeh lazmi hai
+use Filament\Models\Concerns\InteractsWithDatabaseNotifications;
+
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 
 use Illuminate\Notifications\Notifiable;
-//mtlb user admin ko access deny ky lye phli or admin ko panel ki access deny ky lye dusri line add kia he
-
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
+    use HasFactory, Notifiable;
+
     public function canAccessPanel(Panel $panel): bool
     {
          return $this->is_active && $this->role === $panel->getId();
     }
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-        //tells which terms to save in database
     protected $fillable = [
-    'name', 'email', 'phone', 'password', 'previous_password',
-    'must_change_password', 'role', 'preffered_language', 'is_active',
+        'name', 'email', 'phone', 'password', 'previous_password',
+        'must_change_password', 'role', 'preffered_language', 'is_active',
     ];
-        //hides important data if send in json format
+
     protected $hidden = ['password', 'previous_password', 'remember_token'];
 
     protected function casts(): array
     {
-        //saves data_conversion which will be automatically done.
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
@@ -53,9 +46,9 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function hasRole(string $role): bool
-{
-    return $this->role === $role;
-}
+    {
+        return $this->role === $role;
+    }
 
     public function patient() {
          return $this->hasOne(Patient::class); 
@@ -81,3 +74,4 @@ class User extends Authenticatable implements FilamentUser
         return false;
     }
 }
+
