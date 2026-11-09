@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Admissions\Schemas;
 
 use App\Models\Patient;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -10,6 +11,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 
 class AdmissionForm
 {
@@ -89,6 +91,48 @@ class AdmissionForm
                             ->disabled()
                             ->dehydrated(false)
                             ->visibleOn('edit'),
+                    ]),
+
+                Section::make('Discharge and follow-up')
+                    ->columns(2)
+                    ->visible(fn (?Model $record): bool => $record?->status === 'discharged')
+                    ->schema([
+                        DateTimePicker::make('discharge_date')
+                            ->label('Discharged on')
+                            ->seconds(false)
+                            ->disabled()
+                            ->dehydrated(false),
+
+                        Select::make('discharge_type')
+                            ->label('Discharge type')
+                            ->options([
+                                'planned' => 'Planned discharge',
+                                'referred' => 'Referred to another facility',
+                                'left_early' => 'Left early',
+                                'other' => 'Other',
+                            ])
+                            ->disabled()
+                            ->dehydrated(false),
+
+                        DatePicker::make('followup_start_date')
+                            ->label('Follow-up start')
+                            ->disabled()
+                            ->dehydrated(false),
+
+                        DatePicker::make('followup_end_date')
+                            ->label('Follow-up end')
+                            ->disabled()
+                            ->dehydrated(false),
+
+                        Select::make('followup_frequency')
+                            ->label('Follow-up frequency')
+                            ->options([
+                                'daily' => 'Every day',
+                                'alternate_days' => 'Every other day',
+                                'weekly' => 'Once a week',
+                            ])
+                            ->disabled()
+                            ->dehydrated(false),
                     ]),
             ]);
     }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Admission;
 use App\Models\Patient;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -37,6 +38,50 @@ class AdmissionService
 
             // patient status update
             $patient->update(['status' => 'admitted']);
+
+            return $admission;
+        });
+    }
+
+    public function discharge(Admission $admission, array $data): Admission
+    {
+        return DB::transaction(function () use ($admission, $data) {
+            // reload with a lock so the same admission cannot be discharged twice
+            $admission = Admission::query()->lockForUpdate()->findOrFail($admission->getKey());
+
+            if ($admission->status !== 'admitted') {
+                throw new InvalidArgumentException('Only an active admission can be discharged.');
+            }
+
+            $dischargeDate = Carbon::parse($data['discharge_date']);
+
+            if ($dischargeDate->lt($admission->admission_date)) {
+                throw new InvalidArgumentException('The discharge date cannot be before the admission date.');
+            }
+
+            $followupStart = Carbon::parse($data['followup_start_date']);
+            $followupEnd = Carbon::parse($data['followup_end_date']);
+
+            if ($followupStart->lt($dischargeDate->copy()->startOfDay())) {
+                throw new InvalidArgumentException('The follow-up cannot start before the discharge date.');
+            }
+
+            if ($followupEnd->lt($followupStart)) {
+                throw new InvalidArgumentException('The follow-up end date cannot be before the start date.');
+            }
+
+            $admission->update([
+                'status' => 'discharged',
+                'discharge_date' => $dischargeDate,
+                'discharge_type' => $data['discharge_type'],
+                'discharged_by' => auth()->id(),
+                'followup_start_date' => $followupStart->toDateString(),
+                'followup_end_date' => $followupEnd->toDateString(),
+                'followup_frequency' => $data['followup_frequency'],
+            ]);
+
+            // patient status update
+            $admission->patient()->update(['status' => 'discharged']);
 
             return $admission;
         });
