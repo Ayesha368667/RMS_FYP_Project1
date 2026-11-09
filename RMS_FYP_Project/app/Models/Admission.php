@@ -19,7 +19,7 @@ class Admission extends Model
         'admission_type', 'admission_reason', 'referral_source',
         'admission_photo_path', 'admitted_by', 'status', 'discharge_date',
         'discharge_type', 'discharged_by', 'followup_start_date',
-        'followup_end_date',
+        'followup_end_date','followup_frequency',
     ];
 
     protected $casts = [

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class FollowupForm extends Model
 {
+    use HasFactory;
+
     // These questions are LOCKED. Admin cannot delete or change them.
     public const CORE_QUESTIONS = [
         ['key' => 'mood_score', 'type' => 'number', 'min' => 1, 'max' => 10, 'required' => true, 'locked' => true,
