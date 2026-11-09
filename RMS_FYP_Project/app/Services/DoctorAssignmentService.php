@@ -121,8 +121,7 @@ class DoctorAssignmentService
                     ->body($patientName.($patientNumber ? ' ('.$patientNumber.')' : '').' is now your patient (role: '.$role.').')
                     ->icon('heroicon-o-user-plus')
                     ->success()
-                    ->sendToDatabase($targetDoctor->user);
-                    // ->sendToDatabase($assignment->doctor->user);
+                    ->sendToDatabase($assignment->doctor->user);
             }
 
             if ($assignment->patient?->user) {
