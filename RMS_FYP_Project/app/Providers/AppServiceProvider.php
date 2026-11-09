@@ -7,6 +7,7 @@ use App\Models\DoctorAssignment;
 use App\Models\Medicine;
 use App\Models\Patient;
 use App\Models\User;
+use App\Models\FamilyContact;
 use App\Observers\ActivityObserver;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,5 +31,6 @@ class AppServiceProvider extends ServiceProvider
         Patient::observe(ActivityObserver::class);
         Medicine::observe(ActivityObserver::class);
         DoctorAssignment::observe(ActivityObserver::class);
+        FamilyContact::observe(ActivityObserver::class);
     }
 }

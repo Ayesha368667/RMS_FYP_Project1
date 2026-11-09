@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\Patients\Pages\EditPatient;
 use App\Filament\Admin\Resources\Patients\Pages\ListPatients;
 use App\Filament\Admin\Resources\Patients\Schemas\PatientForm;
 use App\Filament\Admin\Resources\Patients\Tables\PatientsTable;
+use App\Filament\Admin\Resources\Patients\RelationManagers\FamilyContactsRelationManager;
 use App\Models\Patient;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -41,7 +42,7 @@ class PatientResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            FamilyContactsRelationManager::class,
         ];
     }
 
