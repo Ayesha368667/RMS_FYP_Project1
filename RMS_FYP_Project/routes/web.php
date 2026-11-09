@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Patient\PatientFollowupController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForcePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -47,6 +48,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
         Route::get('/patient/dashboard', function () {
             return view('patient.dashboard');
         })->name('patient.dashboard');
+        Route::get('/patient/followups', [PatientFollowupController::class, 'show'])
+        ->name('patient.followups');
     });
 
     // Language switcher (en/ur)
