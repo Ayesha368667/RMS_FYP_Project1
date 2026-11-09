@@ -15,6 +15,12 @@ class PatientForm
     {
         return $schema
             ->components([
+                TextInput::make('patient_number')
+                ->label('Patient ID')
+                ->disabled()
+                ->dehydrated(false)
+                ->visibleOn('edit'),
+
                 TextInput::make('name')
                 ->label('Full name')
                 ->required()
@@ -28,7 +34,13 @@ class PatientForm
                 ->email()
                 ->required()
                 ->maxLength(150)
-                ->unique(table: 'users', column: 'email'),
+                ->unique(
+                    table: 'users',
+                    column: 'email',
+                    ignorable: function($record){
+                        return $record?->user;
+                    }
+                 ),
 
             TextInput::make('phone')
                 ->maxLength(20),
