@@ -8,7 +8,7 @@ class DoctorAssignment extends Model
 {
     protected $fillable = [
         'patient_id', 'doctor_id', 'assigned_by', 'assignment_role','assigned_at',
-        'start_date', 'end_date', 'status', 'notes',
+        'start_date', 'end_date', 'status', 'notes','start_date' => 'date',
     ];
 
     protected function casts(): array
