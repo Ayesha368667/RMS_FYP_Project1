@@ -52,6 +52,8 @@ Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', fun
         ->name('patient.followups');
                 Route::post('/patient/followups', [PatientFollowupController::class, 'store'])
             ->name('patient.followups.store');
+                    Route::get('/patient/followups/history', [PatientFollowupController::class, 'history'])
+            ->name('patient.followups.history');
     });
 
 // Language switcher (en/ur)

@@ -145,4 +145,56 @@ class PatientFollowupController extends Controller
             || (isset($core['pain_level'])    && (int) $core['pain_level']    >= self::CRITICAL_PAIN_MIN)
             || (isset($core['craving_level']) && (int) $core['craving_level'] >= self::CRITICAL_CRAVING_MIN);
     }
+        public function history()
+    {
+        $patient = $this->currentPatient();
+        $locale  = app()->getLocale();
+
+        $responses = FollowupResponse::with('form')
+            ->where('patient_id', $patient?->id ?? 0)
+            ->whereNotNull('submitted_at')
+            ->orderByDesc('due_date')
+            ->orderByDesc('id')
+            ->paginate(10);
+
+        $responses->getCollection()->each(
+            fn ($r) => $r->setAttribute('answer_rows', $this->answersFor($r, $locale))
+        );
+
+        return view('patient.history', compact('responses'));
+    }
+
+    // Label + answer for each question, in the patient's language
+    private function answersFor(FollowupResponse $r, string $locale): array
+    {
+        $values = [
+            'mood_score'       => $r->mood_score,
+            'pain_level'       => $r->pain_level,
+            'craving_level'    => $r->craving_level,
+            'medicine_taken'   => $r->medicine_taken,
+            'relapse_reported' => $r->relapse_reported,
+            'remarks'          => $r->remarks,
+        ] + ($r->response_data ?? []);
+
+        $rows = [];
+
+        foreach ($r->form?->questions ?? [] as $q) {
+            $value = $values[$q['key']] ?? null;
+
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            if (($q['type'] ?? '') === 'boolean') {
+                $value = ((int) $value) === 1 ? __('followup.yes') : __('followup.no');
+            }
+
+            $rows[] = [
+                'label' => $q['label_'.$locale] ?? $q['label_en'] ?? $q['key'],
+                'value' => $value,
+            ];
+        }
+
+        return $rows;
+    }
 }
