@@ -50,6 +50,8 @@ Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', fun
         })->name('patient.dashboard');
         Route::get('/patient/followups', [PatientFollowupController::class, 'show'])
         ->name('patient.followups');
+                Route::post('/patient/followups', [PatientFollowupController::class, 'store'])
+            ->name('patient.followups.store');
     });
 
 // Language switcher (en/ur)
