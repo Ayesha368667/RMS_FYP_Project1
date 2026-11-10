@@ -24,9 +24,16 @@ class PatientFollowupController extends Controller
         return Patient::where('user_id', auth()->id())->first();
     }
 
+       // After-care: the admission whose follow-up window includes today
     private function activeAdmission(?Patient $patient): ?Admission
     {
-        return $patient?->admissions()->where('status', 'admitted')->latest('admission_date')->first();
+        return $patient?->admissions()
+            ->where('status', 'discharged')
+            ->whereNotNull('followup_start_date')
+            ->whereDate('followup_start_date', '<=', today())
+            ->whereDate('followup_end_date', '>=', today())
+            ->latest('followup_start_date')
+            ->first();
     }
 
     private function activeForm(): ?FollowupForm
