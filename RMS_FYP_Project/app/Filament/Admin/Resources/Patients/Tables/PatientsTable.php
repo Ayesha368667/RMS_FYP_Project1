@@ -1,50 +1,92 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Patients\Tables;
+namespace App\Filament\Doctor\Resources\Patients\Tables;
 
-use Filament\Actions\Action;
-use Filament\Actions\EditAction;
-use Filament\Notifications\Notification;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PatientsTable
 {
+    /**
+     * The active assignment of the logged-in doctor for this patient.
+     */
+    private static function myAssignment($patient)
+    {
+        $doctorId = (int) auth()->user()?->doctor?->id;
+
+        return $patient->doctorAssignments->first(
+            fn ($assignment): bool => (int) $assignment->doctor_id === $doctorId
+                && $assignment->status === 'active'
+        );
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('patient_number')->label('Patient ID')->searchable()->sortable(),
-                TextColumn::make('user.name')->label('Name')->searchable(),
-                TextColumn::make('father_name')->label('Father name')->searchable(),
-                TextColumn::make('user.phone')->label('Phone'),
-                TextColumn::make('city'),
-                TextColumn::make('status')->badge(),
-                IconColumn::make('user.is_active')->label('Active')->boolean(),
+                TextColumn::make('patient_number')
+                    ->label('Patient ID')
+                    ->searchable()
+                    ->sortable()
+                    ->copyable(),
+
+                TextColumn::make('user.name')
+                    ->label('Name')
+                    ->searchable(),
+
+                TextColumn::make('age')
+                    ->label('Age')
+                    ->state(fn ($record): string => $record->date_of_birth
+                        ? $record->date_of_birth->age.' yrs'
+                        : '-'),
+
+                TextColumn::make('gender')
+                    ->formatStateUsing(fn (?string $state): string => ucfirst((string) $state))
+                    ->placeholder('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('user.phone')
+                    ->label('Phone')
+                    ->placeholder('-')
+                    ->toggleable(),
+
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (?string $state): string => match ($state) {
+                        'admitted' => 'success',
+                        'registered' => 'info',
+                        'inactive' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (?string $state): string => ucfirst((string) $state)),
+
+                TextColumn::make('my_role')
+                    ->label('My role')
+                    ->state(fn ($record): string => ucfirst((string) (self::myAssignment($record)?->assignment_role ?? '-'))),
+
+                TextColumn::make('assigned_since')
+                    ->label('Assigned since')
+                    ->state(fn ($record): string => self::myAssignment($record)?->start_date?->format('d M Y') ?? '-'),
+            ])
+            ->defaultSort('patient_number')
+            ->searchPlaceholder('Search by Patient ID or name')
+            ->filters([
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'registered' => 'Registered',
+                        'admitted' => 'Admitted',
+                        'discharged' => 'Discharged',
+                        'inactive' => 'Inactive',
+                    ]),
             ])
             ->recordActions([
-                EditAction::make(),
-
-                Action::make('toggle')
-                    ->label(function ($record) {
-                        return $record->user->is_active ? 'Deactivate' : 'Activate';
-                    })
-                    ->color(function ($record) {
-                        return $record->user->is_active ? 'danger' : 'success';
-                    })
-                    ->requiresConfirmation()
-                    ->action(function ($record) {
-                        $user = $record->user;
-                        $user->is_active = ! $user->is_active;
-                        $user->save();
-
-                        Notification::make()
-                            ->title($user->is_active ? 'Patient activated' : 'Patient deactivated')
-                            ->success()
-                            ->send();
-                    }),
+                ViewAction::make()
+                    ->label('Open profile'),
             ])
-            ->defaultSort('id', 'desc');
+            ->emptyStateHeading('No patients assigned to you yet')
+            ->emptyStateDescription('Patients appear here once the admin assigns them to you.');
     }
 }

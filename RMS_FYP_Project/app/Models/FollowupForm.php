@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -6,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class FollowupForm extends Model
 {
-    protected $fillable = ['form_name', 'description', 'version_number', 'questions', 'is_active', 'created_by'];
-
     use HasFactory;
 
     protected $fillable = [
@@ -24,6 +23,3 @@ class FollowupForm extends Model
         'is_active' => 'boolean',
     ];
 }
-
-
-  
