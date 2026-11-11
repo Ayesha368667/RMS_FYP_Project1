@@ -14,7 +14,7 @@ class ClinicalAssessment extends Model
 
     protected $fillable = [
         'patient_id', 'admission_id', 'doctor_id', 'assessment_type',
-        'assessment_date', 'presenting_concerns', 'clinical_findings',
+        'assessment_date', 'presenting_concerns', 'clinical_findings','diagnosis' ,
         'mental_health_notes', 'physical_health_notes', 'risk_assessment',
         'recommended_actions', 'next_assessment_date',
     ];
