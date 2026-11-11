@@ -2,10 +2,8 @@
 
 namespace App\Filament\Doctor\Resources\Appointments\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
 
 class AppointmentsTable
 {
@@ -13,18 +11,35 @@ class AppointmentsTable
     {
         return $table
             ->columns([
-                //
+                // Yeh line update karein (patient id ki jagah agar name ya koi aur column ho)
+                TextColumn::make('patient_id')
+                    ->label('Patient ID')
+                    ->searchable()
+                    ->sortable(),
+
+                // Yeh line update karein
+                TextColumn::make('doctor_id')
+                    ->label('Doctor ID')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('appointment_date')
+                    ->label('Appointment Date')
+                    ->dateTime()
+                    ->sortable(),
+
+                TextColumn::make('appointment_type')
+                    ->label('Type')
+                    ->badge(),
             ])
             ->filters([
                 //
             ])
-            ->recordActions([
-                EditAction::make(),
+            ->actions([
+                // Temporary empty to bypass class error
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+            ->bulkActions([
+                //
             ]);
     }
 }

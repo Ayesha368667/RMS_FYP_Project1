@@ -2,6 +2,7 @@
 
 namespace App\Filament\Doctor\Resources\Patients\Tables;
 
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -81,8 +82,10 @@ class PatientsTable
                         'inactive' => 'Inactive',
                     ]),
             ])
-            ->recordUrl(null)
-            ->recordActions([])
+            ->recordActions([
+                ViewAction::make()
+                    ->label('Open profile'),
+            ])
             ->emptyStateHeading('No patients assigned to you yet')
             ->emptyStateDescription('Patients appear here once the admin assigns them to you.');
     }
