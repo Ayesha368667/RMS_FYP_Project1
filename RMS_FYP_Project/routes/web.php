@@ -5,7 +5,8 @@ use App\Http\Controllers\Patient\PatientFollowupController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForcePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-
+use App\Http\Controllers\NotificationController;
+//notification ka bell icon show krany ky lye or handle krny ky lye
 // Homepage
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -62,3 +63,9 @@ Route::get('/lang/{locale}', function ($locale) {
     session(['locale' => $locale]);
     return redirect()->back();
 })->name('lang.switch');
+
+// Notifications: padhi hui karna (teeno roles ke liye)
+    Route::middleware(['auth', 'active', 'password.changed'])->group(function () {
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
+});

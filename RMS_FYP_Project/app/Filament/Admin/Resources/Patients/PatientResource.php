@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Filament\Doctor\Resources\Patients;
+namespace App\Filament\Admin\Resources\Patients;
 
-use App\Filament\Doctor\Resources\Patients\Pages\ListPatients;
-use App\Filament\Doctor\Resources\Patients\Pages\ViewPatient;
-use App\Filament\Doctor\Resources\Patients\RelationManagers\AdmissionsRelationManager;
-use App\Filament\Doctor\Resources\Patients\RelationManagers\ClinicalAssessmentsRelationManager;
-use App\Filament\Doctor\Resources\Patients\RelationManagers\SubstanceUseHistoriesRelationManager;
-use App\Filament\Doctor\Resources\Patients\Tables\PatientsTable;
+use App\Filament\Admin\Resources\Patients\Pages\CreatePatient;
+use App\Filament\Admin\Resources\Patients\Pages\EditPatient;
+use App\Filament\Admin\Resources\Patients\Pages\ListPatients;
+use App\Filament\Admin\Resources\Patients\Pages\ViewPatient;
+use App\Filament\Admin\Resources\Patients\RelationManagers\AdmissionsRelationManager;
+use App\Filament\Admin\Resources\Patients\RelationManagers\ClinicalAssessmentsRelationManager;
+use App\Filament\Admin\Resources\Patients\RelationManagers\SubstanceUseHistoriesRelationManager;
+use App\Filament\Admin\Resources\Patients\Schemas\PatientForm;
+use App\Filament\Admin\Resources\Patients\Tables\PatientsTable;
 use App\Models\Patient;
 use BackedEnum;
 use Filament\Infolists\Components\TextEntry;
@@ -17,24 +20,28 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class PatientResource extends Resource
 {
     protected static ?string $model = Patient::class;
 
-    protected static ?string $navigationLabel = 'My patients';
+    protected static ?string $navigationLabel = 'Patients';
 
-    protected static ?string $pluralModelLabel = 'My patients';
+    protected static ?string $pluralModelLabel = 'Patients';
 
     protected static ?string $modelLabel = 'patient';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Patients';
+    protected static string|UnitEnum|null $navigationGroup = 'Patient care';
 
     protected static ?string $recordTitleAttribute = 'patient_number';
+
+    public static function form(Schema $schema): Schema
+    {
+        return PatientForm::configure($schema);
+    }
 
     public static function infolist(Schema $schema): Schema
     {
@@ -56,12 +63,18 @@ class PatientResource extends Resource
 
                         TextEntry::make('age')
                             ->label('Age')
-                            ->state(fn ($record): string => $record->date_of_birth
-                                ? $record->date_of_birth->age.' yrs'
-                                : '-'),
+                            ->state(function ($record) {
+                                if ($record->date_of_birth) {
+                                    return $record->date_of_birth->age . ' yrs';
+                                }
+
+                                return '-';
+                            }),
 
                         TextEntry::make('gender')
-                            ->formatStateUsing(fn (?string $state): string => ucfirst((string) $state))
+                            ->formatStateUsing(function ($state) {
+                                return ucfirst((string) $state);
+                            })
                             ->placeholder('-'),
 
                         TextEntry::make('city')
@@ -69,13 +82,17 @@ class PatientResource extends Resource
 
                         TextEntry::make('status')
                             ->badge()
-                            ->color(fn (?string $state): string => match ($state) {
-                                'admitted' => 'success',
-                                'registered' => 'info',
-                                'inactive' => 'danger',
-                                default => 'gray',
+                            ->color(function ($state) {
+                                return match ($state) {
+                                    'admitted' => 'success',
+                                    'registered' => 'info',
+                                    'inactive' => 'danger',
+                                    default => 'gray',
+                                };
                             })
-                            ->formatStateUsing(fn (?string $state): string => ucfirst((string) $state)),
+                            ->formatStateUsing(function ($state) {
+                                return ucfirst((string) $state);
+                            }),
                     ]),
             ]);
     }
@@ -96,38 +113,13 @@ class PatientResource extends Resource
         ];
     }
 
-    /**
-     * A doctor only sees patients that have an ACTIVE assignment with that doctor.
-     */
-    public static function getEloquentQuery(): Builder
-    {
-        $doctorId = auth()->user()?->doctor?->id;
-
-        $query = parent::getEloquentQuery()->with(['user', 'doctorAssignments']);
-
-        if (! $doctorId) {
-            // a user without a doctor profile sees nothing
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->whereHas('doctorAssignments', function ($assignments) use ($doctorId) {
-            $assignments
-                ->where('doctor_id', $doctorId)
-                ->where('status', 'active');
-        });
-    }
-
-    // this resource is read-only for doctors
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => ListPatients::route('/'),
+            'create' => CreatePatient::route('/create'),
             'view' => ViewPatient::route('/{record}'),
+            'edit' => EditPatient::route('/{record}/edit'),
         ];
     }
 }

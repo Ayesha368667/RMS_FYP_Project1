@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Doctor\Resources\Patients\Tables;
+namespace App\Filament\Admin\Resources\Patients\Tables;
 
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;

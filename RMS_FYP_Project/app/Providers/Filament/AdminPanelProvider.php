@@ -25,6 +25,13 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->id('admin')
+            //admin just apny notifications dekh skta he bcz id match hony pr hi relevant notification dikhty hen
+            //admin panel me bell icon lgati he
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
+            //bell hr 30 seconds me khud notification
+            //check krta rehta he koi new to ni aya jo show krna he.
+
             ->path('admin')
             
             ->colors(['primary' => 

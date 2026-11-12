@@ -72,6 +72,10 @@
                         </li>
 
                         <li class="nav-item ms-lg-2 mt-3 mt-lg-0">
+                            @include('partials.notification-bell')
+                        </li>
+
+                        <li class="nav-item ms-lg-2 mt-3 mt-lg-0">
                             {{-- Logout route apne project ke mutabiq badal lein --}}
                             <form method="POST" action="{{ url('/logout') }}">
                                 @csrf
