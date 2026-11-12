@@ -1,0 +1,115 @@
+[33m4d7a644[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmember_aiza[m[33m, [m[1;31morigin/member_aiza[m[33m)[m HEAD@{0}: merge Ayesha1122: Merge made by the 'ort' strategy.
+[33m13335b2[m HEAD@{1}: checkout: moving from main to member_aiza
+[33mda61d61[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{2}: checkout: moving from feature/patient_portal_layout to main
+[33m0d68f21[m[33m ([m[1;31morigin/feature/patient_portal_layout[m[33m, [m[1;32mfeature/patient_portal_layout[m[33m)[m HEAD@{3}: checkout: moving from Ayesha1122 to feature/patient_portal_layout
+[33m51315b9[m[33m ([m[1;31morigin/Ayesha1122[m[33m, [m[1;32mAyesha1122[m[33m)[m HEAD@{4}: pull --ff --recurse-submodules --progress -- origin: Fast-forward
+[33m5f2666b[m HEAD@{5}: checkout: moving from main to Ayesha1122
+[33mda61d61[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{6}: merge feature/patient_portal_layout: Fast-forward
+[33m7ee49cc[m HEAD@{7}: checkout: moving from feature/patient_portal_layout to main
+[33mda61d61[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{8}: pull --ff --recurse-submodules --progress -- origin: Fast-forward
+[33m49dcb9a[m HEAD@{9}: checkout: moving from member_aiza to feature/patient_portal_layout
+[33m13335b2[m HEAD@{10}: commit: System Notification class, Bell Icon in admin and doctor panels
+[33m7ee49cc[m HEAD@{11}: checkout: moving from main to member_aiza
+[33m7ee49cc[m HEAD@{12}: checkout: moving from feature/patient_portal_layout to main
+[33m49dcb9a[m HEAD@{13}: checkout: moving from member_Iqra to feature/patient_portal_layout
+[33m5c16d57[m[33m ([m[1;31morigin/member_Iqra[m[33m, [m[1;32mmember_Iqra[m[33m)[m HEAD@{14}: checkout: moving from feature/patient_portal_layout to member_Iqra
+[33m49dcb9a[m HEAD@{15}: pull --ff --recurse-submodules --progress -- origin: Fast-forward
+[33m81f9890[m HEAD@{16}: checkout: moving from member_aiza to feature/patient_portal_layout
+[33m7ee49cc[m HEAD@{17}: merge main: Fast-forward
+[33mc0db251[m HEAD@{18}: checkout: moving from main to member_aiza
+[33m7ee49cc[m HEAD@{19}: commit (merge): Merge branch 'Ayesha1122'
+[33mc418c0e[m HEAD@{20}: commit (merge): Merge branch 'member_aiza'
+[33m8cbc9e4[m HEAD@{21}: checkout: moving from member_aiza to main
+[33mc0db251[m HEAD@{22}: commit: Family Contacts of Patients saved
+[33mceb44c5[m HEAD@{23}: commit: Edit and Deactivate Patients from Admin panel
+[33m132ae52[m HEAD@{24}: checkout: moving from feature/patient_portal_layout to member_aiza
+[33m81f9890[m HEAD@{25}: checkout: moving from Ayesha1122 to feature/patient_portal_layout
+[33mc83d588[m HEAD@{26}: pull --ff --recurse-submodules --progress -- origin: Fast-forward
+[33m4e4c1e9[m HEAD@{27}: checkout: moving from member_aiza to Ayesha1122
+[33m132ae52[m HEAD@{28}: commit: Patient Creation Security Checks
+[33mffd874a[m HEAD@{29}: commit: Doctor edit, activate/deactivate, unique license and creating Patient resource in admin panel
+[33m8c75086[m HEAD@{30}: checkout: moving from feature/patient_portal_layout to member_aiza
+[33m81f9890[m HEAD@{31}: pull --ff --recurse-submodules --progress -- origin: Fast-forward
+[33m902b147[m HEAD@{32}: checkout: moving from member_aiza to feature/patient_portal_layout
+[33m8c75086[m HEAD@{33}: checkout: moving from feature/patient_portal_layout to member_aiza
+[33m902b147[m HEAD@{34}: checkout: moving from member_aiza to feature/patient_portal_layout
+[33m8c75086[m HEAD@{35}: commit: Doctor Resource (Form & Table) in Admin Panel Created
+[33madbc2ac[m HEAD@{36}: checkout: moving from main to member_aiza
+[33m8cbc9e4[m HEAD@{37}: reset: moving to HEAD
+[33m8cbc9e4[m HEAD@{38}: checkout: moving from member_Iqra to main
+[33m5c16d57[m[33m ([m[1;31morigin/member_Iqra[m[33m, [m[1;32mmember_Iqra[m[33m)[m HEAD@{39}: checkout: moving from feature/patient_portal_layout to member_Iqra
+[33m8cbc9e4[m HEAD@{40}: checkout: moving from Ayesha1122 to feature/patient_portal_layout
+[33m4e4c1e9[m HEAD@{41}: checkout: moving from member_aiza to Ayesha1122
+[33madbc2ac[m HEAD@{42}: commit: Activity logging observer
+[33m3866e34[m HEAD@{43}: checkout: moving from main to member_aiza
+[33m8cbc9e4[m HEAD@{44}: reset: moving to HEAD
+[33m8cbc9e4[m HEAD@{45}: commit: Login Logics Admin side Completed
+[33mc014b4d[m HEAD@{46}: checkout: moving from Ayesha1122 to main
+[33mda0380e[m HEAD@{47}: reset: moving to HEAD
+[33mda0380e[m HEAD@{48}: checkout: moving from main to Ayesha1122
+[33mc014b4d[m HEAD@{49}: checkout: moving from Ayesha1122 to main
+[33mda0380e[m HEAD@{50}: checkout: moving from main to Ayesha1122
+[33mc014b4d[m HEAD@{51}: pull --ff --recurse-submodules --progress -- origin: Fast-forward
+[33m3866e34[m HEAD@{52}: checkout: moving from Ayesha1122 to main
+[33mda0380e[m HEAD@{53}: reset: moving to HEAD
+[33mda0380e[m HEAD@{54}: checkout: moving from main to Ayesha1122
+[33m3866e34[m HEAD@{55}: checkout: moving from member_Iqra to main
+[33m5c16d57[m[33m ([m[1;31morigin/member_Iqra[m[33m, [m[1;32mmember_Iqra[m[33m)[m HEAD@{56}: checkout: moving from feature/patient_portal_layout to member_Iqra
+[33md8be46a[m HEAD@{57}: checkout: moving from main to feature/patient_portal_layout
+[33m3866e34[m HEAD@{58}: commit: Correcting Errors and Accepting Changes
+[33mad43ec6[m HEAD@{59}: commit: Login Backend Security
+[33md8be46a[m HEAD@{60}: merge feature/patient_portal_layout: Fast-forward
+[33m512b526[m HEAD@{61}: checkout: moving from feature/patient_portal_layout to main
+[33md8be46a[m HEAD@{62}: checkout: moving from main to feature/patient_portal_layout
+[33m512b526[m HEAD@{63}: checkout: moving from member_Iqra to main
+[33m5c16d57[m[33m ([m[1;31morigin/member_Iqra[m[33m, [m[1;32mmember_Iqra[m[33m)[m HEAD@{64}: checkout: moving from main to member_Iqra
+[33m512b526[m HEAD@{65}: reset: moving to HEAD
+[33m512b526[m HEAD@{66}: merge Ayesha1122: Merge made by the 'ort' strategy.
+[33mf1612cc[m HEAD@{67}: commit (merge): Merge branch 'member_Iqra'
+[33m2cbae6b[m HEAD@{68}: checkout: moving from Ayesha1122 to main
+[33m88bb0e9[m HEAD@{69}: checkout: moving from main to Ayesha1122
+[33m2cbae6b[m HEAD@{70}: checkout: moving from member_Iqra to main
+[33m5c16d57[m[33m ([m[1;31morigin/member_Iqra[m[33m, [m[1;32mmember_Iqra[m[33m)[m HEAD@{71}: checkout: moving from main to member_Iqra
+[33m2cbae6b[m HEAD@{72}: checkout: moving from member_Iqra to main
+[33m5c16d57[m[33m ([m[1;31morigin/member_Iqra[m[33m, [m[1;32mmember_Iqra[m[33m)[m HEAD@{73}: pull --ff --recurse-submodules --progress -- origin: Fast-forward
+[33m98609ed[m HEAD@{74}: checkout: moving from main to member_Iqra
+[33m2cbae6b[m HEAD@{75}: checkout: moving from member_Iqra to main
+[33m98609ed[m HEAD@{76}: checkout: moving from main to member_Iqra
+[33m2cbae6b[m HEAD@{77}: commit: Filament_Middleware,Aliase files
+[33m594e051[m HEAD@{78}: checkout: moving from member_aiza to main
+[33m8ca4fee[m HEAD@{79}: checkout: moving from main to member_aiza
+[33m594e051[m HEAD@{80}: checkout: moving from member_aiza to main
+[33m8ca4fee[m HEAD@{81}: checkout: moving from Ayesha1122 to member_aiza
+[33ma7e0fa8[m HEAD@{82}: checkout: moving from main to Ayesha1122
+[33ma70b292[m HEAD@{83}: commit (merge): Merge branch 'member_aiza'
+[33mac6dd9b[m HEAD@{84}: reset: moving to HEAD
+[33mac6dd9b[m HEAD@{85}: checkout: moving from member_aiza to main
+[33m8ca4fee[m HEAD@{86}: commit: Relationships and Seeder
+[33md3933a6[m HEAD@{87}: checkout: moving from main to member_aiza
+[33mac6dd9b[m HEAD@{88}: reset: moving to HEAD
+[33mac6dd9b[m HEAD@{89}: checkout: moving from member_aiza to main
+[33md3933a6[m HEAD@{90}: checkout: moving from main to member_aiza
+[33mac6dd9b[m HEAD@{91}: checkout: moving from member_aiza to main
+[33md3933a6[m HEAD@{92}: checkout: moving from member_Iqra to member_aiza
+[33m98609ed[m HEAD@{93}: commit: Migrations from Iqra
+[33mdc4fb96[m HEAD@{94}: checkout: moving from main to member_Iqra
+[33mdc4fb96[m HEAD@{95}: checkout: moving from member_aiza to main
+[33md3933a6[m HEAD@{96}: checkout: moving from main to member_aiza
+[33mdc4fb96[m HEAD@{97}: checkout: moving from member_aiza to main
+[33md3933a6[m HEAD@{98}: commit (merge): Merge Ayesha1122 migrations into member_aiza
+[33mfbb550b[m HEAD@{99}: checkout: moving from main to member_aiza
+[33m5fcb592[m HEAD@{100}: checkout: moving from Ayesha1122 to main
+[33ma7e0fa8[m HEAD@{101}: checkout: moving from main to Ayesha1122
+[33m5fcb592[m HEAD@{102}: checkout: moving from member_aiza to main
+[33mfbb550b[m HEAD@{103}: checkout: moving from main to member_aiza
+[33m5fcb592[m HEAD@{104}: checkout: moving from Ayesha1122 to main
+[33me8646a3[m HEAD@{105}: checkout: moving from main to Ayesha1122
+[33m5fcb592[m HEAD@{106}: checkout: moving from Ayesha1122 to main
+[33me8646a3[m HEAD@{107}: checkout: moving from main to Ayesha1122
+[33m5fcb592[m HEAD@{108}: checkout: moving from member_aiza to main
+[33mb07313d[m HEAD@{109}: commit: Fix_table_and_Model_Names
+[33m61644ba[m HEAD@{110}: commit: Core_Migrations_and_Models
+[33m6e7025e[m HEAD@{111}: checkout: moving from main to member_aiza
+[33m6e7025e[m HEAD@{112}: commit: configure_project_settings
+[33m24eebd1[m HEAD@{113}: commit: Filament_Install
+[33ma84839c[m HEAD@{114}: clone: from https://github.com/Ayesha368667/RMS_FYP_Project1.git
