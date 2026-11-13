@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Patients\RelationManagers;
+namespace App\Filament\Doctor\Resources\Patients\RelationManagers;
 
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
