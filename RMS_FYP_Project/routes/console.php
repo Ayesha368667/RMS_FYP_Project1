@@ -12,3 +12,8 @@ Artisan::command('inspire', function () {
 Schedule::command('followups:create-pending')
     ->dailyAt('00:05')
     ->withoutOverlapping();
+    
+// Every day at 00:01 (Pakistan time): the previous day has ended, so unfilled pending rows become missed
+Schedule::command('followups:mark-missed')
+    ->dailyAt('00:01')
+    ->withoutOverlapping();
