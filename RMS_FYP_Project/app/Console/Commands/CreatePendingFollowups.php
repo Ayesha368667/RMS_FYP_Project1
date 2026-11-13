@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Admission;
 use App\Models\FollowupForm;
 use App\Models\FollowupResponse;
+use App\Models\Reminder;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -83,7 +84,22 @@ class CreatePendingFollowups extends Command
                 ]
             );
 
-            $response->wasRecentlyCreated ? $created++ : $existing++;
+            if ($response->wasRecentlyCreated) {
+                $created++;
+
+                // 6) A new row also gets an in-app reminder for the patient
+                Reminder::create([
+                    'patient_id'      => $admission->patient_id,
+                    'reminder_type'   => 'followup_due',
+                    'remindable_type' => FollowupResponse::class,
+                    'remindable_id'   => $response->id,
+                    'scheduled_at'    => $date->copy()->startOfDay(),
+                    'channel'         => 'in_app',
+                    'status'          => 'pending',
+                ]);
+            } else {
+                $existing++;
+            }
         }
 
         $this->info("Date {$date->toDateString()}: {$created} created, {$existing} already existed, {$notDue} not due today.");

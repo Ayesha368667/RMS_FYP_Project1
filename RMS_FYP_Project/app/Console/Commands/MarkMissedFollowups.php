@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\FollowupResponse;
+use App\Models\Reminder;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -26,12 +27,20 @@ class MarkMissedFollowups extends Command
 
         // A day has ended when its date is before today.
         // Only rows that were never submitted are marked.
-        $count = FollowupResponse::where('status', 'pending')
+        $ids = FollowupResponse::where('status', 'pending')
             ->whereNull('submitted_at')
             ->whereDate('due_date', '<', $today)
-            ->update(['status' => 'missed']);
+            ->pluck('id');
 
-        $this->info("Before {$today->toDateString()}: {$count} follow-up row(s) marked as missed.");
+        FollowupResponse::whereIn('id', $ids)->update(['status' => 'missed']);
+
+        // Their in-app reminders are no longer needed
+        Reminder::where('remindable_type', FollowupResponse::class)
+            ->whereIn('remindable_id', $ids)
+            ->where('status', 'pending')
+            ->update(['status' => 'expired']);
+
+        $this->info("Before {$today->toDateString()}: {$ids->count()} follow-up row(s) marked as missed.");
 
         return self::SUCCESS;
     }
