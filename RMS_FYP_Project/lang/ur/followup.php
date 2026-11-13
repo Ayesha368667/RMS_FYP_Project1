@@ -24,4 +24,8 @@ return [
             'pending'   => 'زیر التوا',
         ],
     ],
+        'reminders' => [
+        'followup_due' => ':date کا فالو اپ بھرنا باقی ہے۔',
+        'fill_now'     => 'ابھی بھریں',
+    ],
 ];
