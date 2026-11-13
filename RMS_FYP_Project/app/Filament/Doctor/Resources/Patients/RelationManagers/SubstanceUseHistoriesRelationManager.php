@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Patients\RelationManagers;
+namespace App\Filament\Doctor\Resources\Patients\RelationManagers;
 
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
