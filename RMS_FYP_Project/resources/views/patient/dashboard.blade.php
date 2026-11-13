@@ -7,7 +7,7 @@
 
     <div class="row g-3">
 
-        {{-- Aaj ka follow-up --}}
+        {{-- Today's follow-up --}}
         <div class="col-12 col-lg-6">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -52,7 +52,15 @@
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h2 class="h6 mb-3"><i class="bi bi-bell me-1"></i> {{ __('portal.dashboard.reminders') }}</h2>
-                    <p class="text-muted mb-0">{{ __('portal.dashboard.no_reminders') }}</p>
+
+                    @forelse ($reminders as $reminder)
+                        <div class="alert alert-warning py-2 mb-2">
+                            <div class="small">{{ __('followup.reminders.followup_due', ['date' => $reminder->scheduled_at->format('d/m/Y')]) }}</div>
+                            <a href="{{ route('patient.followups') }}" class="btn btn-warning btn-sm mt-2">{{ __('followup.reminders.fill_now') }}</a>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">{{ __('portal.dashboard.no_reminders') }}</p>
+                    @endforelse
                 </div>
             </div>
         </div>
