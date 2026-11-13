@@ -14,6 +14,7 @@ use App\Filament\Admin\Resources\Patients\RelationManagers\FollowupResponsesRela
 use App\Filament\Admin\Resources\Patients\Schemas\PatientForm;
 use App\Filament\Admin\Resources\Patients\Schemas\PatientInfolist;
 use App\Filament\Admin\Resources\Patients\Tables\PatientsTable;
+
 use App\Models\Patient;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -54,11 +55,13 @@ class PatientResource extends Resource
     {
         return [
             AdmissionsRelationManager::class,
-            DoctorAssignmentsRelationManager::class,
-            FollowupResponsesRelationManager::class,
             AlertsRelationManager::class,
+            DoctorAssignmentsRelationManager::class,
             FamilyContactsRelationManager::class,
+            FollowupResponsesRelationManager::class,
         ];
+            
+        
     }
 
     public static function getPages(): array

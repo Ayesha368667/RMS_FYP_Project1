@@ -11,6 +11,7 @@ use App\Filament\Doctor\Resources\Patients\RelationManagers\ClinicalAssessmentsR
 use App\Filament\Doctor\Resources\Patients\RelationManagers\SubstanceUseHistoriesRelationManager;
 use App\Filament\Doctor\Resources\Patients\Schemas\PatientForm;
 use App\Filament\Doctor\Resources\Patients\Tables\PatientsTable;
+use App\Filament\Doctor\Resources\Patients\RelationManagers\TreatmentPlansRelationManager;
 use App\Models\Patient;
 use BackedEnum;
 use Filament\Infolists\Components\TextEntry;
@@ -103,16 +104,16 @@ class PatientResource extends Resource
     }
 
     public static function getRelations(): array
-    {
-        return [
-            AdmissionsRelationManager::class,
-            RelationGroup::make('History', [
-                SubstanceUseHistoriesRelationManager::class,
-                ClinicalAssessmentsRelationManager::class,
-            ]),
-        ];
-    }
-
+{
+    return [
+        AdmissionsRelationManager::class,
+        TreatmentPlansRelationManager::class,
+        RelationGroup::make('History', [
+            SubstanceUseHistoriesRelationManager::class,
+            ClinicalAssessmentsRelationManager::class,
+        ]),
+    ];
+}
     public static function getPages(): array
     {
         return [
