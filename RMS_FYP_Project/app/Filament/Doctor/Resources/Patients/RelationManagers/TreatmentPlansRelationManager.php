@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Doctor\Resources\Patients\RelationManagers;
+use App\Filament\Doctor\Resources\TreatmentPlans\TreatmentPlanResource;
 
 use App\Services\TreatmentPlanService;
 use Filament\Actions\Action;
@@ -171,6 +172,40 @@ class TreatmentPlansRelationManager extends RelationManager
             ])
             // no delete: a plan is only cancelled, never removed
             ->recordActions([
+                                Action::make('versions')
+                    ->label('Version history')
+                    ->icon('heroicon-o-clock')
+                    ->color('gray')
+                    ->url(fn ($record): string => TreatmentPlanResource::getUrl('view', ['record' => $record])),
+
+                Action::make('complete')
+                    ->label('Mark completed')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->modalHeading('Mark treatment plan as completed')
+                    ->modalDescription('The patient will be notified. This cannot be undone.')
+                    ->modalSubmitActionLabel('Mark completed')
+                    ->visible(fn ($record): bool => $record->status === 'active')
+                    ->schema([
+                        Textarea::make('note')
+                            ->label('Completion note (optional)')
+                            ->rows(2),
+                    ])
+                    ->action(function ($record, array $data): void {
+                        try {
+                            app(TreatmentPlanService::class)->complete($record, $data['note'] ?? null);
+
+                            Notification::make()
+                                ->title('Treatment plan marked as completed')
+                                ->success()
+                                ->send();
+                        } catch (InvalidArgumentException $exception) {
+                            Notification::make()
+                                ->title($exception->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
                 EditAction::make()
                     ->modalHeading('Edit treatment plan')
                     ->visible(fn ($record): bool => in_array($record->status, ['draft', 'active'], true))

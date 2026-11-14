@@ -141,7 +141,34 @@ class TreatmentPlanService
 
         return $plan;
     }
+    public function complete(TreatmentPlan $plan, ?string $note = null): TreatmentPlan
+    {
+        $note = trim((string) $note);
 
+        $plan = DB::transaction(function () use ($plan, $note) {
+            $plan = TreatmentPlan::query()->lockForUpdate()->findOrFail($plan->getKey());
+
+            if ($plan->status !== 'active') {
+                throw new InvalidArgumentException('Only an active plan can be marked as completed.');
+            }
+
+            $this->ensureBaselineVersion($plan);
+
+            $plan->update(['status' => 'completed']);
+
+            $this->recordVersion($plan->refresh(), $note !== '' ? 'Completed: '.$note : 'Marked as completed');
+
+            return $plan;
+        });
+
+        $this->notifyPatient(
+            $plan,
+            'Your treatment plan was completed',
+            'The plan "'.$plan->plan_title.'" was marked as completed.'
+        );
+
+        return $plan;
+    }
     private function ensureBaselineVersion(TreatmentPlan $plan): void
     {
         if (! $plan->versions()->exists()) {
