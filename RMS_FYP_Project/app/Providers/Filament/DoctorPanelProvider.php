@@ -28,12 +28,12 @@ class DoctorPanelProvider extends PanelProvider
             ->id('doctor')
             ->path('doctor')
           
-            ->brandName('RMS Doctor Panel')
+            ->brandName('BloomWay Doctor')
 //brandLogo(asset('images/logo.png'))` bhi laga do.
             ->colors([
-                'primary' => Color::Teal,
-
-            ])
+    'primary' => Color::Teal,
+    'gray' => Color::Zinc,
+])
                     ->navigationGroups([
                     NavigationGroup::make('Patients'),
                     NavigationGroup::make('Clinical'),
