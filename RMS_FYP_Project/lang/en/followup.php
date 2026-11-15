@@ -28,4 +28,7 @@ return [
         'followup_due' => 'Your follow-up for :date is waiting.',
         'fill_now'     => 'Fill it now',
     ],
+        'sms' => [
+        'followup_due' => 'Rehab Portal reminder: please fill in your follow-up for :date.',
+    ],
 ];
