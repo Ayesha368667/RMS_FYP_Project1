@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\Doctors\Pages\EditDoctor;
 use App\Filament\Admin\Resources\Doctors\Pages\ListDoctors;
 use App\Filament\Admin\Resources\Doctors\Schemas\DoctorForm;
 use App\Filament\Admin\Resources\Doctors\Tables\DoctorsTable;
+use App\Filament\Admin\Resources\Doctors\RelationManagers\AssignedPatientsRelationManager;
 use App\Models\Doctor;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -41,7 +42,7 @@ class DoctorResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AssignedPatientsRelationManager::class,
         ];
     }
 

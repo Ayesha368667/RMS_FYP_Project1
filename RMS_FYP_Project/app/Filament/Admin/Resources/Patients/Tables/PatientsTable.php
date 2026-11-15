@@ -2,13 +2,17 @@
 
 namespace App\Filament\Admin\Resources\Patients\Tables;
 
+use App\Models\Admission;
+use App\Models\Doctor;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PatientsTable
 {
@@ -24,6 +28,58 @@ class PatientsTable
                 TextColumn::make('status')->badge(),
                 IconColumn::make('user.is_active')->label('Active')->boolean(),
             ])
+
+            ->searchPlaceholder('Search by Patient ID or name')
+            ->filters([
+
+                // 1. Status filter (patients table ka apna column)
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'registered' => 'Registered',
+                        'admitted'   => 'Admitted',
+                        'discharged' => 'Discharged',
+                        'inactive'   => 'Inactive',
+                    ]),
+
+                // 2. Condition type filter (admissions table se)
+                SelectFilter::make('condition_type')
+                    ->label('Condition type')
+                    ->options(function () {
+                        return Admission::query()
+                            ->distinct()
+                            ->orderBy('admission_type')
+                            ->pluck('admission_type', 'admission_type')
+                            ->toArray();
+                    })
+                    ->query(function (Builder $query, array $data) {
+                        if (! empty($data['value'])) {
+                            $query->whereHas('admissions', function ($q) use ($data) {
+                                $q->where('admission_type', $data['value']);
+                            });
+                        }
+
+                        return $query;
+                    }),
+
+                // 3. Doctor filter (sirf active assignment wale patients)
+                SelectFilter::make('doctor')
+                    ->label('Doctor')
+                    ->options(function () {
+                        return Doctor::with('user')->get()->pluck('user.name', 'id')->toArray();
+                    })
+                    ->query(function (Builder $query, array $data) {
+                        if (! empty($data['value'])) {
+                            $query->whereHas('doctorAssignments', function ($q) use ($data) {
+                                $q->where('doctor_id', $data['value'])
+                                  ->where('status', 'active');
+                            });
+                        }
+
+                        return $query;
+                    }),
+            ])
+
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
