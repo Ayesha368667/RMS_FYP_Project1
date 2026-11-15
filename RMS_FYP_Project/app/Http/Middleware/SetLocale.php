@@ -12,7 +12,10 @@ class SetLocale
     {
         // Admin/doctor panels ko English hi rehne dein
         if (! $request->is('admin*', 'doctor*')) {
-            $locale = session('locale', config('app.locale'));
+                        // 1) language button choice, 2) language saved on the user, 3) app default
+            $locale = session('locale')
+                ?? $request->user()?->preffered_language
+                ?? config('app.locale');
 
             if (in_array($locale, ['en', 'ur'], true)) {
                 app()->setLocale($locale);

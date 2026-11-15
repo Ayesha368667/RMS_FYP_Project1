@@ -10,31 +10,23 @@ class FollowupFormSeeder extends Seeder
 {
     public function run(): void
     {
-        // created_by required hai, is liye pehle ek admin user chahiye
         $admin = User::where('role', 'admin')->first() ?? User::first();
 
         if (! $admin) {
-            $this->command->error('No user found! Create user first.');
+            $this->command->error('No user found. Create an admin first.');
             return;
         }
 
-        FollowupForm::updateOrCreate(
-        // Pehla array: record dhoondhne ke liye
-            ['form_name' => 'Default Follow-up Form', 'version_number' => 1],
-            // Doosra array: baqi data jo save ya update hoga
-            [
-                'description' => 'Standard check-in form for rehabilitation patients.',
-                'is_active'   => true,
-                'created_by'  => $admin->id,
-                'questions'   => [
-                    ['key' => 'mood_score', 'label' => 'Aaj aap ka mood kaisa hai? (1-10)', 'type' => 'number', 'min' => 1, 'max' => 10, 'required' => true],
-                    ['key' => 'pain_level', 'label' => 'Dard ki shiddat (0-10)', 'type' => 'number', 'min' => 0, 'max' => 10, 'required' => true],
-                    ['key' => 'craving_level', 'label' => 'Talab (craving) ki shiddat (0-10)', 'type' => 'number', 'min' => 0, 'max' => 10, 'required' => true],
-                    ['key' => 'medicine_taken', 'label' => 'Kya aap ne dawai waqt par li?', 'type' => 'boolean', 'required' => true],
-                    ['key' => 'relapse_reported', 'label' => 'Kya pichle check-in ke baad relapse hua?', 'type' => 'boolean', 'required' => true],
-                    ['key' => 'remarks', 'label' => 'Koi aur baat jo aap batana chahein', 'type' => 'textarea', 'required' => false],
-                ],
-            ]
-        );
+        $form = FollowupForm::firstOrNew(['form_name' => 'Default Follow-up Form']);
+
+        if (! $form->exists) {
+            $form->version_number = 1;
+            $form->created_by     = $admin->id;
+            $form->is_active      = ! FollowupForm::where('is_active', true)->exists();
+        }
+
+        $form->description = 'Standard check-in form for rehabilitation patients.';
+        $form->questions   = FollowupForm::buildQuestions($form->extraQuestions());
+        $form->save();
     }
 }

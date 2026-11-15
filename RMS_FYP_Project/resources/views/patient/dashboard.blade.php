@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h2 class="h6 mb-1">{{ __('portal.dashboard.todays_followup') }}</h2>
                     <p class="text-muted">{{ __('portal.dashboard.followup_desc') }}</p>
-                    <a href="#" class="btn btn-primary btn-sm">{{ __('portal.dashboard.open_form') }}</a>
+                    <a href="{{ Route::has('patient.followups') ? route('patient.followups') : '#' }}" class="btn btn-primary btn-sm">{{ __('portal.dashboard.open_form') }}</a>
                 </div>
             </div>
         </div>

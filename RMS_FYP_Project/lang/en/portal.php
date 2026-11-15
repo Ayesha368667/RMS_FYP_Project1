@@ -36,4 +36,13 @@ return [
     ],
 
     'footer' => 'All rights reserved.',
+        'followup' => [
+        'title'          => 'Daily follow-up',
+        'intro'          => 'Please answer these questions about today.',
+        'yes'            => 'Yes',
+        'no'             => 'No',
+        'submit'         => 'Submit',
+        'coming_soon'    => 'Submit (coming soon)',
+        'no_active_form' => 'There is no follow-up form right now. Please check again later.',
+    ],
 ];
