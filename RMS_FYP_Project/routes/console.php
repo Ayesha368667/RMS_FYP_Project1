@@ -17,3 +17,8 @@ Schedule::command('followups:create-pending')
 Schedule::command('followups:mark-missed')
     ->dailyAt('00:01')
     ->withoutOverlapping();
+    
+// Every hour: send an SMS for follow-up reminders that the patient has not acted on
+Schedule::command('reminders:send-sms-fallback')
+    ->hourly()
+    ->withoutOverlapping();
