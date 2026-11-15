@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Patient\PatientCareController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Patient\PatientFollowupController;
 use App\Http\Controllers\Patient\PatientDashboardController;
@@ -54,6 +55,10 @@ Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', fun
             ->name('patient.followups.store');
                     Route::get('/patient/followups/history', [PatientFollowupController::class, 'history'])
             ->name('patient.followups.history');
+                    Route::get('/patient/treatment-plan', [PatientCareController::class, 'treatmentPlan'])
+            ->name('patient.treatment-plan');
+        Route::get('/patient/medicines', [PatientCareController::class, 'medicines'])
+            ->name('patient.medicines');
     });
 
 // Language switcher (en/ur)
