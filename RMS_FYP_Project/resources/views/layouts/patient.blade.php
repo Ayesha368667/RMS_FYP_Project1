@@ -50,6 +50,16 @@
                                 <i class="bi bi-clipboard2-pulse me-1"></i> {{ __('portal.nav.followups') }}
                             </a>
                         </li>
+                                                <li class="nav-item">
+                            <a class="nav-link {{ request()->is('patient/treatment-plan*') ? 'active' : '' }}" href="{{ $link('patient.treatment-plan') }}">
+                                <i class="bi bi-journal-medical me-1"></i> {{ __('care.nav.plan') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('patient/medicines*') ? 'active' : '' }}" href="{{ $link('patient.medicines') }}">
+                                <i class="bi bi-capsule me-1"></i> {{ __('care.nav.medicines') }}
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('patient/chat*') ? 'active' : '' }}" href="{{ $link('patient.chat') }}">
                                 <i class="bi bi-chat-dots me-1"></i> {{ __('portal.nav.chat') }}
