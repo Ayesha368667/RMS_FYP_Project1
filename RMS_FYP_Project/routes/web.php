@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Patient\PatientCareController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Patient\PatientFollowupController;
+use App\Http\Controllers\Patient\PatientDashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForcePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -46,15 +48,18 @@ Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', fun
 
     // Patient portal (C ke pages yahan aayenge)
     Route::middleware(['auth', 'active', 'password.changed', 'role:patient'])->group(function () {
-        Route::get('/patient/dashboard', function () {
-            return view('patient.dashboard');
-        })->name('patient.dashboard');
+                Route::get('/patient/dashboard', [PatientDashboardController::class, 'index'])
+            ->name('patient.dashboard');
         Route::get('/patient/followups', [PatientFollowupController::class, 'show'])
         ->name('patient.followups');
                 Route::post('/patient/followups', [PatientFollowupController::class, 'store'])
             ->name('patient.followups.store');
                     Route::get('/patient/followups/history', [PatientFollowupController::class, 'history'])
             ->name('patient.followups.history');
+                    Route::get('/patient/treatment-plan', [PatientCareController::class, 'treatmentPlan'])
+            ->name('patient.treatment-plan');
+        Route::get('/patient/medicines', [PatientCareController::class, 'medicines'])
+            ->name('patient.medicines');
     });
 
 // Language switcher (en/ur)

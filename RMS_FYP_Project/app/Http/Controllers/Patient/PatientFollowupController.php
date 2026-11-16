@@ -7,6 +7,7 @@ use App\Models\Admission;
 use App\Models\FollowupForm;
 use App\Models\FollowupResponse;
 use App\Models\Patient;
+use App\Models\Reminder;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -24,9 +25,16 @@ class PatientFollowupController extends Controller
         return Patient::where('user_id', auth()->id())->first();
     }
 
+       // After-care: the admission whose follow-up window includes today
     private function activeAdmission(?Patient $patient): ?Admission
     {
-        return $patient?->admissions()->where('status', 'admitted')->latest('admission_date')->first();
+        return $patient?->admissions()
+            ->where('status', 'discharged')
+            ->whereNotNull('followup_start_date')
+            ->whereDate('followup_start_date', '<=', today())
+            ->whereDate('followup_end_date', '>=', today())
+            ->latest('followup_start_date')
+            ->first();
     }
 
     private function activeForm(): ?FollowupForm
@@ -132,6 +140,11 @@ class PatientFollowupController extends Controller
             // Two clicks at the same time: the database allows only one row per day
             return redirect()->route('patient.followups');
         }
+                // The follow-up is filled in, so its reminder is done
+        Reminder::where('remindable_type', FollowupResponse::class)
+            ->where('remindable_id', $response->id)
+            ->where('status', 'pending')
+            ->update(['status' => 'done']);
 
         $next = Route::has('patient.followups.history') ? 'patient.followups.history' : 'patient.followups';
 
