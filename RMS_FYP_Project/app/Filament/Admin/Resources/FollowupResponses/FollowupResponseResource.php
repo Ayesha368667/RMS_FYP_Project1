@@ -10,6 +10,8 @@ use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class FollowupResponseResource extends Resource
 {
@@ -31,12 +33,19 @@ class FollowupResponseResource extends Resource
         return false;
     }
 
-    // Sidebar mein missed follow-ups ka number
+        // Sidebar mein naye missed follow-ups ka number (last visit ke baad ke)
     public static function getNavigationBadge(): ?string
     {
-        $count = FollowupResponse::whereNull('submitted_at')
-            ->whereDate('due_date', '<', today())
-            ->count();
+        $query = FollowupResponse::whereNull('submitted_at')
+            ->whereDate('due_date', '<', today());
+
+        $lastSeen = Cache::get('followups_last_seen_' . auth()->id());
+
+        if ($lastSeen) {
+            $query->whereDate('due_date', '>=', Carbon::parse($lastSeen)->toDateString());
+        }
+
+        $count = $query->count();
 
         return $count > 0 ? (string) $count : null;
     }
