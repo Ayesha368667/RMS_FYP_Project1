@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Alerts\Tables;
 
 use App\Models\Alert;
 use App\Models\Patient;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -124,6 +125,9 @@ class AlertsTable
 
                         return $query;
                     }),
+            ])
+            ->recordActions([
+                    ViewAction::make(),
             ]);
     }
 }

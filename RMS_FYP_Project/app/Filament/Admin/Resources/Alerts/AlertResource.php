@@ -3,14 +3,19 @@
 namespace App\Filament\Admin\Resources\Alerts;
 
 use App\Filament\Admin\Resources\Alerts\Pages\ListAlerts;
+use App\Filament\Admin\Resources\Alerts\Pages\ViewAlert;
+use App\Filament\Admin\Resources\Alerts\RelationManagers\AlertActionsRelationManager;
+use App\Filament\Admin\Resources\Alerts\RelationManagers\FamilyContactLogsRelationManager;
+use App\Filament\Admin\Resources\Alerts\Schemas\AlertInfolist;
 use App\Filament\Admin\Resources\Alerts\Tables\AlertsTable;
 use App\Models\Alert;
-use Illuminate\Support\Facades\Cache;
 use BackedEnum;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class AlertResource extends Resource
 {
@@ -30,7 +35,7 @@ class AlertResource extends Resource
         return false;
     }
 
-        // Sidebar mein naye open alerts ka number (last visit ke baad ke)
+    // Sidebar mein naye open alerts ka number (last visit ke baad ke)
     public static function getNavigationBadge(): ?string
     {
         $query = Alert::where('status', 'open');
@@ -51,15 +56,29 @@ class AlertResource extends Resource
         return 'danger';
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return AlertInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return AlertsTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            AlertActionsRelationManager::class,
+            FamilyContactLogsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => ListAlerts::route('/'),
+            'view' => ViewAlert::route('/{record}'),
         ];
     }
 }

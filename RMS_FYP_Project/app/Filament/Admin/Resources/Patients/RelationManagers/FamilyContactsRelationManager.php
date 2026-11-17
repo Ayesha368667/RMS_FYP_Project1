@@ -58,7 +58,7 @@ class FamilyContactsRelationManager extends RelationManager
                 ->default('not_granted')
                 ->required(),
 
-            Select::make('preffered_language')
+            Select::make('preferred_language')
                 ->label('SMS language')
                 ->options([
                     'en' => 'English',
@@ -89,7 +89,7 @@ class FamilyContactsRelationManager extends RelationManager
                     ->color(function ($state) {
                         return $state === 'granted' ? 'success' : 'gray';
                     }),
-                TextColumn::make('preffered_language')->label('Language'),
+                TextColumn::make('preferred_language')->label('Language'),
                 IconColumn::make('is_primary')->label('Primary')->boolean(),
                 IconColumn::make('is_active')->label('Active')->boolean(),
             ])
