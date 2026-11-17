@@ -13,7 +13,10 @@ use App\Filament\Doctor\Resources\Patients\Schemas\PatientForm;
 use App\Filament\Doctor\Resources\Patients\Tables\PatientsTable;
 use App\Filament\Doctor\Resources\Patients\RelationManagers\TreatmentPlansRelationManager;
 use App\Models\Patient;
+use App\Filament\Doctor\Resources\Patients\RelationManagers\PatientMedicinesRelationManager;
+use App\Filament\Doctor\Resources\Patients\RelationManagers\TherapySessionsRelationManager;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
@@ -105,14 +108,36 @@ class PatientResource extends Resource
 
     public static function getRelations(): array
 {
-    return [
+     return [
         AdmissionsRelationManager::class,
         TreatmentPlansRelationManager::class,
+        PatientMedicinesRelationManager::class,
+        TherapySessionsRelationManager::class,
         RelationGroup::make('History', [
             SubstanceUseHistoriesRelationManager::class,
             ClinicalAssessmentsRelationManager::class,
         ]),
     ];
+}
+public static function getEloquentQuery(): Builder
+{
+    $doctorId = auth()->user()?->doctor?->id;
+
+    $query = parent::getEloquentQuery()->with('user');
+
+    if (! $doctorId) {
+        return $query->whereRaw('1 = 0');
+    }
+
+    return $query->whereHas('activeAssignments', fn (Builder $q) => $q->where('doctor_id', $doctorId));
+}
+public static function canCreate(): bool
+{
+    return false;
+}
+public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+{
+    return false;
 }
     public static function getPages(): array
     {
