@@ -2,67 +2,71 @@
 
 namespace App\Filament\Doctor\Resources\Appointments;
 
-use App\Filament\Doctor\Resources\Appointments\Pages\CreateAppointment;
-use App\Filament\Doctor\Resources\Appointments\Pages\EditAppointment;
 use App\Filament\Doctor\Resources\Appointments\Pages\ListAppointments;
-use App\Filament\Doctor\Resources\Appointments\Schemas\AppointmentForm;
 use App\Filament\Doctor\Resources\Appointments\Tables\AppointmentsTable;
 use App\Models\Appointment;
 use BackedEnum;
-use UnitEnum;
-use Illuminate\Database\Eloquent\Builder;
-
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use UnitEnum;
 
 class AppointmentResource extends Resource
 {
-      protected static ?string $model = Appointment::class;
+    protected static ?string $model = Appointment::class;
 
-protected static string|UnitEnum|null $navigationGroup = 'Medicines and Appointments';
+    protected static ?string $navigationLabel = 'Appointments';
 
-protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|UnitEnum|null $navigationGroup = 'Medicines and Appointments';
 
-    
-
-    public static function form(Schema $schema): Schema
-    {
-        return AppointmentForm::configure($schema);
-    }
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     public static function table(Table $table): Table
     {
         return AppointmentsTable::configure($table);
     }
 
-    public static function getRelations(): array
+    // a doctor sees only HIS OWN appointments
+    public static function getEloquentQuery(): Builder
     {
-        return [
-            //
-        ];
+        $doctorId = auth()->user()?->doctor?->id;
+
+        $query = parent::getEloquentQuery();
+
+        if (! $doctorId) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->where('doctor_id', $doctorId);
+    }
+
+    // everything is done with buttons on the list (approve, reject, schedule...)
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return false;
     }
 
     public static function getPages(): array
     {
         return [
             'index' => ListAppointments::route('/'),
-            'create' => CreateAppointment::route('/create'),
-            'edit' => EditAppointment::route('/{record}/edit'),
         ];
     }
-    public static function getEloquentQuery(): Builder
-{
-    $doctorId = \App\Models\Doctor::where('user_id', auth()->id())->value('id');
-    
-    if (!$doctorId) {
-        return parent::getEloquentQuery()->whereRaw('1 = 0');
-    }
-
-    return parent::getEloquentQuery()->whereHas('patient.doctorAssignments', function ($query) use ($doctorId) {
-        $query->where('doctor_id', $doctorId)->where('status', 'active');
-    });
-}
-
 }
