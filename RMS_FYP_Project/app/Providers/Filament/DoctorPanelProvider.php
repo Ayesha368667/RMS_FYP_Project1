@@ -30,12 +30,15 @@ class DoctorPanelProvider extends PanelProvider
           
             ->brandName('BloomWay Doctor')
 //brandLogo(asset('images/logo.png'))` bhi laga do.
+->widgets([
+    AccountWidget::class,
+])
             ->colors([
     'primary' => Color::Teal,
     'gray' => Color::Zinc,
 ])
                     ->navigationGroups([
-                    NavigationGroup::make('Patients'),
+                    NavigationGroup::make('Patients care'),
                     NavigationGroup::make('Clinical'),
                     NavigationGroup::make('Medicines and Appointments'),
             ])
