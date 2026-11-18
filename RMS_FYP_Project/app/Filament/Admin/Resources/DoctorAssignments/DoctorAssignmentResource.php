@@ -9,6 +9,7 @@ use App\Filament\Admin\Resources\DoctorAssignments\Schemas\DoctorAssignmentForm;
 use App\Filament\Admin\Resources\DoctorAssignments\Tables\DoctorAssignmentsTable;
 use App\Models\DoctorAssignment;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -20,8 +21,9 @@ class DoctorAssignmentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-protected static string|\UnitEnum|null $navigationGroup = 'Patient care';
-
+    protected static string|\UnitEnum|null $navigationGroup = 'Patient care';
+    protected static ?int $navigationSort = 4;
+    
     public static function form(Schema $schema): Schema
     {
         return DoctorAssignmentForm::configure($schema);

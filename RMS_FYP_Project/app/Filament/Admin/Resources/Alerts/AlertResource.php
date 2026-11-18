@@ -10,6 +10,7 @@ use App\Filament\Admin\Resources\Alerts\Schemas\AlertInfolist;
 use App\Filament\Admin\Resources\Alerts\Tables\AlertsTable;
 use App\Models\Alert;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -22,6 +23,9 @@ class AlertResource extends Resource
     protected static ?string $model = Alert::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBellAlert;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Monitoring';
+    protected static ?int $navigationSort = 2;
 
     // Patient aur raised_by ka naam ek hi query mein aa jaye
     public static function getEloquentQuery(): Builder

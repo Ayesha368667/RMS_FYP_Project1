@@ -33,6 +33,12 @@ class AdminPanelProvider extends PanelProvider
             //check krta rehta he koi new to ni aya jo show krna he.
 
             ->path('admin')
+            ->navigationGroups([
+                'Patient care',
+                'Monitoring',
+                'Master data',
+                'System',
+            ])
             
             ->colors(['primary' => 
                 \Filament\Support\Colors\Color::Teal

@@ -6,6 +6,7 @@ use App\Filament\Admin\Resources\FamilyContactLogs\Pages\ListFamilyContactLogs;
 use App\Filament\Admin\Resources\FamilyContactLogs\Tables\FamilyContactLogsTable;
 use App\Models\FamilyContactLog;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -18,6 +19,9 @@ class FamilyContactLogResource extends Resource
     protected static ?string $navigationLabel = 'Family Contact Logs';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhone;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Monitoring';
+    protected static ?int $navigationSort = 3;
 
     // Patient, family member aur contacted_by ek hi query mein aa jayein
     public static function getEloquentQuery(): Builder

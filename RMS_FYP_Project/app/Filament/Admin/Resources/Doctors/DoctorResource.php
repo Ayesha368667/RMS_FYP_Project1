@@ -10,6 +10,7 @@ use App\Filament\Admin\Resources\Doctors\Tables\DoctorsTable;
 use App\Filament\Admin\Resources\Doctors\RelationManagers\AssignedPatientsRelationManager;
 use App\Models\Doctor;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -23,6 +24,8 @@ class DoctorResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|UnitEnum|null $navigationGroup = 'Patient care';
+    protected static ?int $navigationSort = 2;
     // Har doctor ke saath uska user bhi ek hi query mein aa jaye
     public static function getEloquentQuery(): Builder
     {
