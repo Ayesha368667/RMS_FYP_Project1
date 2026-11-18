@@ -39,7 +39,11 @@ class AdminPanelProvider extends PanelProvider
                 'Master data',
                 'System',
             ])
-            
+            ->brandName('BloomWay')
+                ->brandLogo(asset('images/bloomway-logo.png'))
+                ->brandLogoHeight('2.5rem')
+                ->favicon(asset('images/bloomway-logo.png'))
+                
             ->colors(['primary' => 
                 \Filament\Support\Colors\Color::Teal
             ])
