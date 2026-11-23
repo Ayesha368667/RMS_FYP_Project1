@@ -22,3 +22,8 @@ Schedule::command('followups:mark-missed')
 Schedule::command('reminders:send-sms-fallback')
     ->hourly()
     ->withoutOverlapping();
+    
+// Every hour: alerts that are still open after 24 hours are escalated
+Schedule::command('alerts:escalate')
+    ->hourly()
+    ->withoutOverlapping();
