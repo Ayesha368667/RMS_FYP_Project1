@@ -10,14 +10,18 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+
+use App\Filament\Admin\Widgets\DashboardStats;
+use App\Filament\Admin\Widgets\OpenAlerts;
+use App\Filament\Admin\Widgets\PendingFollowups;
+use App\Filament\Admin\Widgets\QuickLinks;
+use Filament\Widgets\AccountWidget;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,6 +35,15 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotificationsPolling('30s')
             //bell hr 30 seconds me khud notification
             //check krta rehta he koi new to ni aya jo show krna he.
+
+            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
+            ->widgets([
+                AccountWidget::class,
+                DashboardStats::class,
+                QuickLinks::class,
+                PendingFollowups::class,
+                OpenAlerts::class,
+            ])
 
             ->path('admin')
             ->navigationGroups([
@@ -53,11 +66,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
-            ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
-            ])
+            
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
