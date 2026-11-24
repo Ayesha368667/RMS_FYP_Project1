@@ -27,3 +27,8 @@ Schedule::command('reminders:send-sms-fallback')
 Schedule::command('alerts:escalate')
     ->hourly()
     ->withoutOverlapping();
+    
+// Every hour: send an SMS for approved appointment reminders
+Schedule::command('reminders:send-appointment-sms')
+    ->hourly()
+    ->withoutOverlapping();
