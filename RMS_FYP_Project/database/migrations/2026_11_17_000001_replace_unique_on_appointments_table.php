@@ -14,16 +14,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('appointments', function (Blueprint $table) {
-            $table->dropUnique(['doctor_id', 'appointment_date']);
+            // 1. Pehle normal index banayein taake foreign key ko sahara mil jaye
             $table->index(['doctor_id', 'appointment_date']);
+
+            // 2. Ab purana unique index drop karein
+            $table->dropUnique(['doctor_id', 'appointment_date']);
         });
     }
 
     public function down(): void
     {
         Schema::table('appointments', function (Blueprint $table) {
-            $table->dropIndex(['doctor_id', 'appointment_date']);
+            // 1. Pehle unique index wapas banayein
             $table->unique(['doctor_id', 'appointment_date']);
+
+            // 2. Phir normal index drop karein
+            $table->dropIndex(['doctor_id', 'appointment_date']);
         });
     }
 };

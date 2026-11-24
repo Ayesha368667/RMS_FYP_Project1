@@ -58,4 +58,8 @@ class Admission extends Model
     {
         return $this->hasMany(PatientMedicine::class);
     }
+    public function postDischargeNotes(): HasMany
+{
+    return $this->hasMany(PostDischargeNote::class);
+}
 }
