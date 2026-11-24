@@ -165,5 +165,6 @@ class MyProfile extends Page
             ->title('Profile updated')
             ->success()
             ->send();
+            $this->redirect(static::getUrl(), navigate: false);
     }
 }

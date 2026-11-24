@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Patient\PatientCareController;
 use Illuminate\Support\Facades\Route;
+
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Patient\PatientFollowupController;
 use App\Http\Controllers\Patient\PatientDashboardController;
 use App\Http\Controllers\Auth\LoginController;
@@ -74,3 +76,11 @@ Route::get('/lang/{locale}', function ($locale) {
     Route::post('/notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
 });
+
+Route::middleware(['auth'])->get('/doctor/avatar', function () {
+    $path = auth()->user()?->doctor?->photo_path;
+
+    abort_unless($path && Storage::disk('local')->exists($path), 404);
+
+    return Storage::disk('local')->response($path);
+})->name('doctor.avatar');

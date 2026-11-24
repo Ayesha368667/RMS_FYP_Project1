@@ -10,7 +10,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Filament\Models\Contracts\HasDatabaseNotifications; // <-- Yeh lazmi hai
 use Filament\Models\Concerns\InteractsWithDatabaseNotifications;
-
+use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Support\Facades\Storage;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -20,10 +21,19 @@ use Illuminate\Notifications\Notifiable;
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements HasAvatar
 {
     use HasFactory, Notifiable;
+public function getFilamentAvatarUrl(): ?string
+{
+    $path = $this->doctor?->photo_path;
 
+    if (! $path || ! Storage::disk('local')->exists($path)) {
+        return null;
+    }
+
+    return route('doctor.avatar', ['v' => md5($path)]);
+}
     public function canAccessPanel(Panel $panel): bool
     {
          return $this->is_active && $this->role === $panel->getId();
