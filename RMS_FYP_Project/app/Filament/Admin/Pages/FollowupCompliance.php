@@ -17,11 +17,13 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Admin\Concerns\ExportsReport;
 use UnitEnum;
 
 class FollowupCompliance extends Page implements HasTable
 {
     use InteractsWithTable;
+    use ExportsReport;
 
    protected string $view = 'filament.admin.pages.followup-compliance';
 
@@ -42,33 +44,8 @@ class FollowupCompliance extends Page implements HasTable
             ->heading('Follow-up compliance')
             // Filters lagne ke baad ka summary
             ->description(function () {
-                $query = $this->getFilteredTableQuery();
-
-                $responded = (clone $query)->whereNotNull('submitted_at')->count();
-
-                $missed = (clone $query)->whereNull('submitted_at')
-                    ->whereDate('due_date', '<', today())
-                    ->count();
-
-                $pending = (clone $query)->whereNull('submitted_at')
-                    ->whereDate('due_date', '>=', today())
-                    ->count();
-
-                // Pending ko ginti mein nahi liya, kyunki unka waqt abhi guzra nahi
-                $dueTotal = $responded + $missed;
-
-                $compliance = 'N/A';
-
-                if ($dueTotal > 0) {
-                    $compliance = round(($responded / $dueTotal) * 100) . '%';
-                }
-
-                return 'Responded: ' . $responded
-                    . ' | Missed: ' . $missed
-                    . ' | Pending: ' . $pending
-                    . ' | Compliance: ' . $compliance
-                    . ' (responded / (responded + missed))';
-            })
+    return $this->reportSummary();
+})
             ->columns([
                 TextColumn::make('patient.user.name')
                     ->label('Patient')
@@ -216,5 +193,80 @@ class FollowupCompliance extends Page implements HasTable
                     }),
             ])
             ->emptyStateHeading('No follow-ups found');
+    }
+        protected function reportTitle(): string
+    {
+        return 'Follow-up Compliance Report';
+    }
+
+    protected function reportSummary(): string
+    {
+        $query = $this->getFilteredTableQuery();
+
+        $responded = (clone $query)->whereNotNull('submitted_at')->count();
+
+        $missed = (clone $query)->whereNull('submitted_at')
+            ->whereDate('due_date', '<', today())
+            ->count();
+
+        $pending = (clone $query)->whereNull('submitted_at')
+            ->whereDate('due_date', '>=', today())
+            ->count();
+
+        $dueTotal = $responded + $missed;
+
+        $compliance = 'N/A';
+
+        if ($dueTotal > 0) {
+            $compliance = round(($responded / $dueTotal) * 100) . '%';
+        }
+
+        return 'Responded: ' . $responded
+            . ' | Missed: ' . $missed
+            . ' | Pending: ' . $pending
+            . ' | Compliance: ' . $compliance
+            . ' (responded / (responded + missed))';
+    }
+
+    protected function reportHeadings(): array
+    {
+        return ['Patient', 'Condition', 'Due date', 'Submitted at', 'Status', 'Critical'];
+    }
+
+    protected function reportRows(): array
+    {
+        $responses = $this->getFilteredTableQuery()->orderBy('due_date', 'desc')->get();
+        $rows = [];
+
+        foreach ($responses as $response) {
+            if ($response->submitted_at !== null) {
+                $status = 'Responded';
+            } elseif ($response->due_date->lt(today())) {
+                $status = 'Missed';
+            } else {
+                $status = 'Pending';
+            }
+
+            $condition = 'Not set';
+            if ($response->patient && $response->patient->condition_type) {
+                $condition = ucfirst(str_replace('_', ' ', $response->patient->condition_type));
+            }
+
+            $submittedAt = '-';
+            if ($response->submitted_at) {
+                $submittedAt = $response->submitted_at->format('d M Y, h:i A');
+            }
+
+            $rows[] = [
+                $response->patient->user->name ?? '-',
+                $condition,
+                $response->due_date->format('d M Y'),
+                $submittedAt,
+                $status,
+                $response->is_critical ? 'Yes' : 'No',
+            ];
+        }
+
+        return $rows;
     }
 }

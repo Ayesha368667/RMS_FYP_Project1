@@ -16,11 +16,13 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Admin\Concerns\ExportsReport;
 use UnitEnum;
 
 class AdmissionsReport extends Page implements HasTable
 {
     use InteractsWithTable;
+    use ExportsReport;
 
     protected string $view = 'filament.admin.pages.admissions-report';
 
@@ -41,17 +43,7 @@ class AdmissionsReport extends Page implements HasTable
             ->heading('Admissions & Discharges')
             // Filters lagne ke baad ka summary
             ->description(function () {
-                $query = $this->getFilteredTableQuery();
-
-                $total = (clone $query)->count();
-                $admitted = (clone $query)->where('status', 'admitted')->count();
-                $discharged = (clone $query)->where('status', 'discharged')->count();
-                $cancelled = (clone $query)->where('status', 'cancelled')->count();
-
-                return 'Total: ' . $total
-                    . ' | Currently admitted: ' . $admitted
-                    . ' | Discharged: ' . $discharged
-                    . ' | Cancelled: ' . $cancelled;
+                return $this->reportSummary();
             })
             ->columns([
                 TextColumn::make('admission_number')
@@ -209,5 +201,64 @@ class AdmissionsReport extends Page implements HasTable
                     }),
             ])
             ->emptyStateHeading('No admissions found');
+    }
+      // ===== Export ke liye methods (Excel aur PDF dono yahi use karte hain) =====
+    //inko week 5 ky kam me smjhna jb bhi smjho gy.
+    protected function reportTitle(): string
+    {
+        return 'Admissions and Discharges Report';
+    }
+
+    protected function reportSummary(): string
+    {
+        $query = $this->getFilteredTableQuery();
+
+        $total = (clone $query)->count();
+        $admitted = (clone $query)->where('status', 'admitted')->count();
+        $discharged = (clone $query)->where('status', 'discharged')->count();
+        $cancelled = (clone $query)->where('status', 'cancelled')->count();
+
+        return 'Total: ' . $total
+            . ' | Currently admitted: ' . $admitted
+            . ' | Discharged: ' . $discharged
+            . ' | Cancelled: ' . $cancelled;
+    }
+
+    protected function reportHeadings(): array
+    {
+        return ['Admission no.', 'Patient', 'Admitted on', 'Type', 'Status', 'Discharged on', 'Discharge type', 'Stay (days)'];
+    }
+
+    protected function reportRows(): array
+    {
+        $admissions = $this->getFilteredTableQuery()->orderBy('admission_date', 'desc')->get();
+        $rows = [];
+
+        foreach ($admissions as $admission) {
+            $end = $admission->discharge_date ?? now();
+
+            $dischargeType = '-';
+            if ($admission->discharge_type) {
+                $dischargeType = ucfirst(str_replace('_', ' ', $admission->discharge_type));
+            }
+
+            $dischargeDate = '-';
+            if ($admission->discharge_date) {
+                $dischargeDate = $admission->discharge_date->format('d M Y');
+            }
+
+            $rows[] = [
+                $admission->admission_number,
+                $admission->patient->user->name ?? '-',
+                $admission->admission_date->format('d M Y'),
+                ucfirst($admission->admission_type),
+                ucfirst($admission->status),
+                $dischargeDate,
+                $dischargeType,
+                (int) $admission->admission_date->diffInDays($end),
+            ];
+        }
+
+        return $rows;
     }
 }

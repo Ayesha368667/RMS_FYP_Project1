@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Pages;
 
+use App\Filament\Admin\Concerns\ExportsReport;
 use App\Models\Alert;
 use App\Models\Doctor;
 use App\Models\DoctorAssignment;
@@ -21,6 +22,7 @@ use UnitEnum;
 class AlertsReport extends Page implements HasTable
 {
     use InteractsWithTable;
+    use ExportsReport;
 
     protected string $view = 'filament.admin.pages.alerts-report';
 
@@ -41,19 +43,7 @@ class AlertsReport extends Page implements HasTable
             ->heading('Alerts report')
             // Filters lagne ke baad ka summary
             ->description(function () {
-                $query = $this->getFilteredTableQuery();
-
-                $total = (clone $query)->count();
-                $open = (clone $query)->where('status', 'open')->count();
-                $underAction = (clone $query)->where('status', 'under_action')->count();
-                $resolved = (clone $query)->where('status', 'resolved')->count();
-                $serious = (clone $query)->whereIn('severity', ['critical', 'high'])->count();
-
-                return 'Total: ' . $total
-                    . ' | Open: ' . $open
-                    . ' | Under action: ' . $underAction
-                    . ' | Resolved: ' . $resolved
-                    . ' | Critical/High: ' . $serious;
+                return $this->reportSummary();
             })
             ->columns([
                 TextColumn::make('patient.user.name')
@@ -192,5 +182,65 @@ class AlertsReport extends Page implements HasTable
                     }),
             ])
             ->emptyStateHeading('No alerts found');
+    }
+
+    // ===== Export ke liye methods (Excel aur PDF dono yahi use karte hain) =====
+
+    protected function reportTitle(): string
+    {
+        return 'Alerts Report';
+    }
+
+    protected function reportSummary(): string
+    {
+        $query = $this->getFilteredTableQuery();
+
+        $total = (clone $query)->count();
+        $open = (clone $query)->where('status', 'open')->count();
+        $underAction = (clone $query)->where('status', 'under_action')->count();
+        $resolved = (clone $query)->where('status', 'resolved')->count();
+        $serious = (clone $query)->whereIn('severity', ['critical', 'high'])->count();
+
+        return 'Total: ' . $total
+            . ' | Open: ' . $open
+            . ' | Under action: ' . $underAction
+            . ' | Resolved: ' . $resolved
+            . ' | Critical/High: ' . $serious;
+    }
+
+    protected function reportHeadings(): array
+    {
+        return ['Patient', 'Condition', 'Type', 'Severity', 'Status', 'Reason', 'Triggered at', 'Resolved at'];
+    }
+
+    protected function reportRows(): array
+    {
+        $alerts = $this->getFilteredTableQuery()->orderBy('triggered_at', 'desc')->get();
+        $rows = [];
+
+        foreach ($alerts as $alert) {
+            $condition = 'Not set';
+            if ($alert->patient && $alert->patient->condition_type) {
+                $condition = ucfirst(str_replace('_', ' ', $alert->patient->condition_type));
+            }
+
+            $resolvedAt = '-';
+            if ($alert->resolved_at) {
+                $resolvedAt = $alert->resolved_at->format('d M Y, h:i A');
+            }
+
+            $rows[] = [
+                $alert->patient->user->name ?? '-',
+                $condition,
+                ucfirst(str_replace('_', ' ', $alert->alert_type)),
+                ucfirst($alert->severity),
+                ucfirst(str_replace('_', ' ', $alert->status)),
+                $alert->trigger_reason,
+                $alert->triggered_at->format('d M Y, h:i A'),
+                $resolvedAt,
+            ];
+        }
+
+        return $rows;
     }
 }
