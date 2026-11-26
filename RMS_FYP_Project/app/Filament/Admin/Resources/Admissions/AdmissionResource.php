@@ -9,6 +9,7 @@ use App\Filament\Admin\Resources\Admissions\Schemas\AdmissionForm;
 use App\Filament\Admin\Resources\Admissions\Tables\AdmissionsTable;
 use App\Models\Admission;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -25,6 +26,8 @@ class AdmissionResource extends Resource
     protected static ?string $recordTitleAttribute = 'admission_number';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Patient care';
+    protected static ?int $navigationSort = 3;
+    
     public static function form(Schema $schema): Schema
     {
         return AdmissionForm::configure($schema);

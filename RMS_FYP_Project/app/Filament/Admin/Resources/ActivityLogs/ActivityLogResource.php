@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\ActivityLogs\Pages\ViewActivityLog;
 use App\Models\ActivityLog;
 use App\Models\User;
 use BackedEnum;
+use UnitEnum;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\TextEntry;
@@ -33,7 +34,8 @@ class ActivityLogResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
-    protected static ?int $navigationSort = 100;
+    protected static string|UnitEnum|null $navigationGroup = 'System';
+    protected static ?int $navigationSort = 2;
 
     // ---- Read-only: koi bhi na banaye, na badle, na mitaye ----
     public static function canCreate(): bool

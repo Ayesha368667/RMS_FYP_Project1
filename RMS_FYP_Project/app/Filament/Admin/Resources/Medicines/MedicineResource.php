@@ -9,6 +9,7 @@ use App\Filament\Admin\Resources\Medicines\Schemas\MedicineForm;
 use App\Filament\Admin\Resources\Medicines\Tables\MedicinesTable;
 use App\Models\Medicine;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -20,11 +21,11 @@ class MedicineResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|UnitEnum|null $navigationGroup = 'Master data';
+    protected static ?int $navigationSort = 2;
+
     // (a) Record title attribute ko 'name' kar diya hai
     protected static ?string $recordTitleAttribute = 'name';
-
-    // (b) Navigation group add kar diya hai
-    protected static string|\UnitEnum|null $navigationGroup = 'Master data';
 
     public static function form(Schema $schema): Schema
     {

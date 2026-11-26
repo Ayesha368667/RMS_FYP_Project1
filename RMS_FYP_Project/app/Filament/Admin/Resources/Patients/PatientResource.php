@@ -17,6 +17,7 @@ use App\Filament\Admin\Resources\Patients\Tables\PatientsTable;
 
 use App\Models\Patient;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -30,6 +31,8 @@ class PatientResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|UnitEnum|null $navigationGroup = 'Patient care';
+    protected static ?int $navigationSort = 1;
     // Har patient ke saath uska user bhi ek hi query mein aa jaye
     public static function getEloquentQuery(): Builder
     {

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\FollowupForms;
 use App\Models\FollowupForm;
+use UnitEnum;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Hidden;
@@ -24,6 +25,9 @@ class FollowupFormResource extends Resource
     protected static ?string $model = FollowupForm::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Master data';
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $navigationLabel = 'Follow-up Forms';
 

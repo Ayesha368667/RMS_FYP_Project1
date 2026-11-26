@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\AlertService;
 use App\Models\FollowupResponse;
 use App\Models\Reminder;
 use Carbon\Carbon;
@@ -39,6 +40,12 @@ class MarkMissedFollowups extends Command
             ->whereIn('remindable_id', $ids)
             ->where('status', 'pending')
             ->update(['status' => 'expired']);
+                    // Jin patients ke rows abhi missed hue, un ka alert check karo
+        $alertService = app(AlertService::class);
+        $patientIds = FollowupResponse::whereIn('id', $ids)->pluck('patient_id')->unique();
+        foreach ($patientIds as $patientId) {
+            $alertService->checkMissedFollowups($patientId, $today);
+        }
 
         $this->info("Before {$today->toDateString()}: {$ids->count()} follow-up row(s) marked as missed.");
 

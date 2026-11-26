@@ -1,9 +1,13 @@
 <?php
 
-use App\Http\Controllers\Patient\PatientCareController;
 use Illuminate\Support\Facades\Route;
 
+
 use Illuminate\Support\Facades\Storage;
+
+use App\Http\Controllers\Patient\PatientAppointmentController;
+use App\Http\Controllers\Patient\PatientCareController;
+
 use App\Http\Controllers\Patient\PatientFollowupController;
 use App\Http\Controllers\Patient\PatientDashboardController;
 use App\Http\Controllers\Auth\LoginController;
@@ -11,6 +15,8 @@ use App\Http\Controllers\Auth\ForcePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NotificationController;
 //notification ka bell icon show krany ky lye or handle krny ky lye
+
+
 // Homepage
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -62,6 +68,10 @@ Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', fun
             ->name('patient.treatment-plan');
         Route::get('/patient/medicines', [PatientCareController::class, 'medicines'])
             ->name('patient.medicines');
+                    Route::get('/patient/appointments', [PatientAppointmentController::class, 'index'])
+            ->name('patient.appointments');
+        Route::post('/patient/appointments', [PatientAppointmentController::class, 'store'])
+            ->name('patient.appointments.store');
     });
 
 // Language switcher (en/ur)

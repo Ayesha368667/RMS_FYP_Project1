@@ -10,14 +10,19 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+
+use App\Filament\Admin\Widgets\DashboardStats;
+use App\Filament\Admin\Widgets\OpenAlerts;
+use App\Filament\Admin\Widgets\PendingFollowups;
+use App\Filament\Admin\Widgets\QuickLinks;
+use App\Filament\Admin\Widgets\RecentActivity;
+use Filament\Widgets\AccountWidget;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -32,22 +37,40 @@ class AdminPanelProvider extends PanelProvider
             //bell hr 30 seconds me khud notification
             //check krta rehta he koi new to ni aya jo show krna he.
 
+            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
+            ->widgets([
+                AccountWidget::class,
+                DashboardStats::class,
+                QuickLinks::class,
+                PendingFollowups::class,
+                OpenAlerts::class,
+                RecentActivity::class,
+            ])
+
             ->path('admin')
-            
+            ->navigationGroups([
+                'Patient care',
+                'Monitoring',
+                'Master data',
+                'Reports',
+                'System',
+            ])
+            ->brandName('BloomWay')
+                ->brandLogo(asset('images/bloomway-logo.png'))
+                ->brandLogoHeight('2.5rem')
+                ->favicon(asset('images/bloomway-logo.png'))
+                
             ->colors(['primary' => 
                 \Filament\Support\Colors\Color::Teal
             ])
+                ->databaseNotifications()
 
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
-            ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
-            ])
+            
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

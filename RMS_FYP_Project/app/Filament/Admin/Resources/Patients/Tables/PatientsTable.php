@@ -25,6 +25,20 @@ class PatientsTable
                 TextColumn::make('father_name')->label('Father name')->searchable(),
                 TextColumn::make('user.phone')->label('Phone'),
                 TextColumn::make('city'),
+
+                // NAYA: patient ki condition
+                TextColumn::make('condition_type')
+                    ->label('Condition')
+                    ->badge()
+                    ->placeholder('Not set')
+                    ->formatStateUsing(function ($state) {
+                        if (! $state) {
+                            return null;
+                        }
+
+                        return ucfirst(str_replace('_', ' ', $state));
+                    }),
+
                 TextColumn::make('status')->badge(),
                 IconColumn::make('user.is_active')->label('Active')->boolean(),
             ])
@@ -42,9 +56,19 @@ class PatientsTable
                         'inactive'   => 'Inactive',
                     ]),
 
-                // 2. Condition type filter (admissions table se)
+                // 2. NAYA: Condition type filter (patients table ka apna column)
                 SelectFilter::make('condition_type')
                     ->label('Condition type')
+                    ->options([
+                        'drug_addiction' => 'Drug addiction',
+                        'mental_health'  => 'Mental health',
+                        'both'           => 'Both',
+                    ]),
+
+                // 3. Admission type filter (admissions table se)
+                // Pehle isay galti se "Condition type" likha tha
+                SelectFilter::make('admission_type')
+                    ->label('Admission type')
                     ->options(function () {
                         return Admission::query()
                             ->distinct()
@@ -62,7 +86,7 @@ class PatientsTable
                         return $query;
                     }),
 
-                // 3. Doctor filter (sirf active assignment wale patients)
+                // 4. Doctor filter (sirf active assignment wale patients)
                 SelectFilter::make('doctor')
                     ->label('Doctor')
                     ->options(function () {

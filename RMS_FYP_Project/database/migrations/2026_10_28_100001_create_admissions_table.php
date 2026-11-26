@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('admissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('patients')->restrictOnDelete();
-            // batches table is not confirmed yet, so no foreign key for now
+
             $table->unsignedBigInteger('batch_id')->nullable();
             $table->string('admission_number', 30)->unique();
             $table->dateTime('admission_date');

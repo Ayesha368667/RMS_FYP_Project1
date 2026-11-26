@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Pages;
 
 use BackedEnum;
+use UnitEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 
@@ -10,7 +11,8 @@ class Notifications extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBell;
 
-    protected static ?int $navigationSort = 90;
+    protected static string|UnitEnum|null $navigationGroup = 'System';
+    protected static ?int $navigationSort = 1;
 
     protected string $view = 'filament.admin.pages.notifications';
 

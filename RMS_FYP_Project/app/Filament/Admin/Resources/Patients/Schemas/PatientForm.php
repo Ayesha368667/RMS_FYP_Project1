@@ -64,6 +64,13 @@ class PatientForm
                     'other'  => 'Other',
                 ]),
 
+                Select::make('condition_type')
+                    ->label('Condition type')
+                    ->options([
+                        'drug_addiction' => 'Drug addiction',
+                        'mental_health' => 'Mental health',
+                        'both' => 'Both',
+                    ]),
             TextInput::make('city')
                 ->maxLength(100),
 
