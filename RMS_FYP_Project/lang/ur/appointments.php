@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'title'            => 'اپائنٹمنٹس',
+    'request_title'    => 'اپائنٹمنٹ کی درخواست',
+    'type'             => 'اپائنٹمنٹ کی قسم',
+    'type_consultation' => 'مشاورت',
+    'type_counselling'  => 'کونسلنگ',
+    'type_follow_up'    => 'فالو اپ',
+    'reason'           => 'وجہ (اختیاری)',
+    'submit'           => 'درخواست بھیجیں',
+    'my_appointments'  => 'میری اپائنٹمنٹس',
+    'none'             => 'ابھی آپ کی کوئی اپائنٹمنٹ نہیں ہے۔',
+    'doctor'           => 'ڈاکٹر',
+    'requested_on'     => 'درخواست کی تاریخ',
+    'date'             => 'تاریخ اور وقت',
+    'after_approval'   => 'منظوری کے بعد',
+    'status'           => 'حالت',
+    'status_requested' => 'درخواست بھیجی گئی',
+    'status_approved'  => 'منظور',
+    'status_rejected'  => 'مسترد',
+    'status_completed' => 'مکمل',
+    'status_cancelled' => 'منسوخ',
+    'status_missed'    => 'چھوٹ گئی',
+    'rejection_reason' => 'مسترد کرنے کی وجہ',
+    'no_doctor'        => 'آپ کو ابھی کوئی ڈاکٹر مقرر نہیں ہوا، براہ کرم ہسپتال سے رابطہ کریں۔',
+    'saved'            => 'آپ کی درخواست بھیج دی گئی ہے۔',
+];

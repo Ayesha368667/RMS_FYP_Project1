@@ -140,6 +140,13 @@ class PatientFollowupController extends Controller
             // Two clicks at the same time: the database allows only one row per day
             return redirect()->route('patient.followups');
         }
+                try {
+            $response->save();
+        } catch (UniqueConstraintViolationException $e) {
+            // Two clicks at the same time: the database allows only one row per day
+            return redirect()->route('patient.followups');
+        }
+                // The follow-up is filled in, so its reminder is done
                 // The follow-up is filled in, so its reminder is done
         Reminder::where('remindable_type', FollowupResponse::class)
             ->where('remindable_id', $response->id)

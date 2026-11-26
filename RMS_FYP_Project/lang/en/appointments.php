@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'title'            => 'Appointments',
+    'request_title'    => 'Request an appointment',
+    'type'             => 'Appointment type',
+    'type_consultation' => 'Consultation',
+    'type_counselling'  => 'Counselling',
+    'type_follow_up'    => 'Follow-up',
+    'reason'           => 'Reason (optional)',
+    'submit'           => 'Send request',
+    'my_appointments'  => 'My appointments',
+    'none'             => 'You have no appointments yet.',
+    'doctor'           => 'Doctor',
+    'requested_on'     => 'Requested on',
+    'date'             => 'Date and time',
+    'after_approval'   => 'After approval',
+    'status'           => 'Status',
+    'status_requested' => 'Requested',
+    'status_approved'  => 'Approved',
+    'status_rejected'  => 'Rejected',
+    'status_completed' => 'Completed',
+    'status_cancelled' => 'Cancelled',
+    'status_missed'    => 'Missed',
+    'rejection_reason' => 'Reason for rejection',
+    'no_doctor'        => 'No doctor is assigned to you yet. Please contact the hospital.',
+    'saved'            => 'Your request has been sent.',
+];
