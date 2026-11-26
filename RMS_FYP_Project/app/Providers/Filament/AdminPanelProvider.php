@@ -21,6 +21,7 @@ use App\Filament\Admin\Widgets\DashboardStats;
 use App\Filament\Admin\Widgets\OpenAlerts;
 use App\Filament\Admin\Widgets\PendingFollowups;
 use App\Filament\Admin\Widgets\QuickLinks;
+use App\Filament\Admin\Widgets\RecentActivity;
 use Filament\Widgets\AccountWidget;
 
 class AdminPanelProvider extends PanelProvider
@@ -43,6 +44,7 @@ class AdminPanelProvider extends PanelProvider
                 QuickLinks::class,
                 PendingFollowups::class,
                 OpenAlerts::class,
+                RecentActivity::class,
             ])
 
             ->path('admin')
@@ -50,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
                 'Patient care',
                 'Monitoring',
                 'Master data',
+                'Reports',
                 'System',
             ])
             ->brandName('BloomWay')
