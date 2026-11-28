@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Patient\PatientProfileController;
 use App\Http\Controllers\Patient\PatientNotificationController;
 use App\Http\Controllers\Patient\PatientAppointmentController;
 use App\Http\Controllers\Patient\PatientCareController;
@@ -67,12 +68,20 @@ Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', fun
         Route::post('/patient/appointments', [PatientAppointmentController::class, 'store'])
             ->name('patient.appointments.store');
             Route::get('/patient/notifications', [PatientNotificationController::class, 'index'])
-    ->name('patient.notifications');
+            ->name('patient.notifications');
+    Route::get('/patient/profile', [PatientProfileController::class, 'show'])->name('patient.profile');
+    Route::put('/patient/profile', [PatientProfileController::class, 'update'])->name('patient.profile.update');
     });
 
 // Language switcher (en/ur)
 Route::get('/lang/{locale}', function ($locale) {
     abort_unless(in_array($locale, ['en', 'ur']), 404);
     session(['locale' => $locale]);
+
+    if ($user = auth()->user()) {
+        $user->preffered_language = $locale;
+        $user->save();
+    }
+
     return redirect()->back();
 })->name('lang.switch');
