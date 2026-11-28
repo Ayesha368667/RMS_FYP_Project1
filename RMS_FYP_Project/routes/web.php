@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Patient\PatientNotificationController;
 use App\Http\Controllers\Patient\PatientAppointmentController;
 use App\Http\Controllers\Patient\PatientCareController;
 use App\Http\Controllers\Patient\PatientFollowupController;
@@ -65,6 +66,8 @@ Route::middleware(['auth', 'active', 'password.changed'])->get('/dashboard', fun
             ->name('patient.appointments');
         Route::post('/patient/appointments', [PatientAppointmentController::class, 'store'])
             ->name('patient.appointments.store');
+            Route::get('/patient/notifications', [PatientNotificationController::class, 'index'])
+    ->name('patient.notifications');
     });
 
 // Language switcher (en/ur)

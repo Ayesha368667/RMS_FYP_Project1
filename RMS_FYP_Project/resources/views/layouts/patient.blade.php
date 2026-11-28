@@ -66,6 +66,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {{ request()->is('patient/notifications*') ? 'active' : '' }}" href="{{ $link('patient.notifications') }}">
+                                <i class="bi bi-bell me-1"></i> {{ __('notifications.title') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->is('patient/profile*') ? 'active' : '' }}" href="{{ $link('patient.profile') }}">
                                 <i class="bi bi-person me-1"></i> {{ __('portal.nav.profile') }}
                             </a>
